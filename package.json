@@ -1,0 +1,29 @@
+{
+  "name": "@2fd/commander",
+  "version": "0.1.0",
+  "description": "Modular implementation of commander.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/2fd/commander.git"
+  },
+  "keywords": [
+    "command"
+  ],
+  "author": "Fede Ramirez <i@2fd.me>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/2fd/commander/issues"
+  },
+  "homepage": "https://github.com/2fd/commander#readme",
+  "dependencies": {
+    "commander": "^2.9.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.4.5"
+  }
+}
