@@ -1,2 +1,2 @@
-# commander
-Modular implementation of commander.js
+# Command
+Modular command line tool
