@@ -129,7 +129,7 @@ export class Command implements CommandInterface {
     }
 
     /**
-     * Retunr usage description
+     * Return usage description
      */
     helpUsage(input: InputInterface): string {
 
@@ -143,7 +143,10 @@ export class Command implements CommandInterface {
 
         return repeat(' ', TAB_SIZE) + `Usage: ${execution} ${options} ${paramDefinition} \n`;
     }
-
+    
+    /**
+     * Return command description
+     */
     helpDescription(): string {
 
         if (this.description)
@@ -153,7 +156,7 @@ export class Command implements CommandInterface {
     }
 
     /**
-     * return options description
+     * Return flags description
      */
     helpFlagList(input: InputInterface): string {
 

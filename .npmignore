@@ -1,3 +1,14 @@
-test/
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependency directory
+.vscode
+node_modules
+test
+typings
+
+# Source files
 .gitignore
 *.ts

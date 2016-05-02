@@ -12,6 +12,10 @@ interface ParamValue {
     value: string | Array<string>;
 }
 
+/**
+ * Usage:
+ *  new Param('')
+ */
 export class Param implements ParamInterface<InputValueList> {
 
     definition: string;
@@ -104,10 +108,14 @@ export class Param implements ParamInterface<InputValueList> {
     }
 }
 
+/**
+ * 
+ */
 export class NoParams implements ParamInterface<InputValueList> {
 
     definition = '';
 
+    /** Throw an error if any param is pushed */
     push(param: string): void {
         throw new Error('Unexpected param: ' + param);
     }
@@ -121,6 +129,7 @@ export class IgnoreParams implements ParamInterface<InputValueList> {
 
     definition = '';
 
+    /** Ignore any param pushed */
     push(param: string): void { }
 
     get(): InputValueList {
