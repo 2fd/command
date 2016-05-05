@@ -18,7 +18,7 @@ describe('./lib/command/command', () => {
             expect(() => {
                 (new EmptyCommandImplementation)
                     .handle(new ArgvInput([]), new DummyOutput);
-            }).to.throw(Error);
+            }).to.throw(Error, 'Command must be define params property');
 
             // ParamsCommandImplementation ---------------------
             class ParamsCommandImplementation extends Command {
@@ -28,27 +28,18 @@ describe('./lib/command/command', () => {
             expect(() => {
                 (new ParamsCommandImplementation)
                     .handle(new ArgvInput([]), new DummyOutput);
-            }).to.throw(Error);
+            }).to.throw(Error, 'Command must be define flag list property');
 
             // FlagssCommandImplementation --------------------
             class FlagssCommandImplementation extends Command {
+                params = new NoParams();
                 flags = [];
             }
 
             expect(() => {
                 (new FlagssCommandImplementation)
                     .handle(new ArgvInput([]), new DummyOutput);
-            }).to.throw(Error);
-
-            // ActionCommandImplementation --------------------
-            class ActionCommandImplementation extends Command {
-                action() { }
-            }
-
-            expect(() => {
-                (new ActionCommandImplementation)
-                    .handle(new ArgvInput([]), new DummyOutput);
-            }).to.throw(Error);
+            }).to.throw(Error, 'Command must be implement action method');
 
             // MinimunCommandImplementation --------------------
             class MinimunCommandImplementation extends Command {
@@ -66,7 +57,45 @@ describe('./lib/command/command', () => {
             }).to.not.throw(Error);
         });
 
+        it('flags can not be repeated', () => {
 
+            // FlagRepeatCommand --------------------
+            class FlagRepeatCommand extends Command {
+
+                params = new NoParams();
+
+                flags = [
+                    new BoolanFlag('flag1', ['-f'], 'flag1 description'),
+                    new BoolanFlag('flag2', ['-f'], 'flag1 description')
+                ];
+
+                action() { }
+            }
+
+            expect(() => {
+                (new FlagRepeatCommand)
+                    .handle(new ArgvInput([]), new DummyOutput);
+            }).to.throw(Error, 'Cannot overwrite flag -f in command FlagRepeatCommand');
+
+            // FlagNameRepeatCommand --------------------
+            class FlagNameRepeatCommand extends Command {
+
+                params = new NoParams();
+
+                flags = [
+                    new BoolanFlag('FlagName', ['-a'], 'flagA description'),
+                    new BoolanFlag('FlagName', ['-b'], 'flagB description')
+                ];
+
+                action() { }
+            }
+
+            expect(() => {
+                (new FlagNameRepeatCommand)
+                    .handle(new ArgvInput([]), new DummyOutput);
+            }).to.throw(Error, 'Cannot overwrite flag with name FlagName in command FlagNameRepeatCommand');
+        });
+        
         it('action method accept input and output param', () => {
 
             class MinimunCommandImplementation extends Command {

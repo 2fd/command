@@ -15,24 +15,12 @@ import {
 
 import {repeat, TAB_SIZE} from './helper';
 
-/**
- * Base implementation from command
- */
-export class Command implements CommandInterface {
+export class SoftCommand implements CommandInterface {
 
     /**
      * Falg index
      */
-    _flags: { [option: string]: FlagInterface } = {};
-
-    /**
-     * Enable command strict mode:
-     *
-     * throws Error if:
-     * - try overwrite a flag
-     * - use a option not defined in options list
-     */
-    strict: boolean;
+    _flags: { [option: string]: FlagInterface };
 
     /**
      * Describe command behavior
@@ -59,30 +47,32 @@ export class Command implements CommandInterface {
      */
     action(input: InputInterface, output: OutputInterface): void {
         throw new Error('Command must be implement action method');
-    };
+    }
 
     /**
      * Add option list and help flags to flag index
      */
     initialize() {
+        
+        if(this._flags)
+            return;
+            
+        this._flags = {}
         this.helpFlag = this.helpFlag || new HelpFlag;
         this.flags.push(this.helpFlag);
         this.flags.forEach((flag) => this.addFlag(flag));
-    };
+    }
 
     /**
      * Add option to flag index
      */
     addFlag(flag: FlagInterface): this {
 
-        let flags = flag.list;
-
-        flags.forEach((flags: string) => {
-            if (this.strict && this._flags[flags])
-                throw new Error(`Cannot overwrite flag ${flags} in strict mode`);
-
-            this._flags[flags] = flag;
-        });
+        flag
+            .list
+            .forEach((f: string) => {
+                this._flags[f] = flag;
+            });
 
         return this;
     }
@@ -183,11 +173,77 @@ export class Command implements CommandInterface {
      */
     parseFlag(flag: string, input: InputInterface, output: OutputInterface) {
 
-        if (this._flags[flag]) {
-            this._flags[flag].parse(input, output);
+        this._flags[flag].parse(input, output);
+    }
+}
 
-        } else if (this.strict) {
+type FlagSet = {
+    [name: string]: boolean
+}
+
+/**
+ * Base implementation from command
+ */
+export class Command  extends SoftCommand implements CommandInterface {
+
+    /**
+     * Add option to flag index
+     */
+    addFlag(flag: FlagInterface): this {
+        
+        let command = (<any & {name: string}>this.constructor).name;
+
+        flag
+            .list
+            .forEach((f: string) => {
+                if (this._flags[f])
+                    throw new Error(`Cannot overwrite flag ${f} in command ${command}`);
+            });
+        
+        super.addFlag(flag);
+
+        return this;
+    }
+    
+    initialize(){
+        
+        if(this._flags)
+            return;
+        
+        let command = (<any & {name: string}>this.constructor).name;
+        
+        if(!this.params)
+            throw new Error('Command must be define params property');
+            
+        if(!Array.isArray(this.flags))
+            throw new Error('Command must be define flag list property');
+            
+        this
+            .flags
+            .reduce<FlagSet>(
+                (index, flag: FlagInterface): FlagSet => {
+                    
+                    if(index[flag.name])
+                        throw new Error(`Cannot overwrite flag with name ${flag.name} in command ${command}`);
+                    
+                    index[flag.name] = true;
+                    
+                    return index;
+                },
+                {}
+            );
+        
+        super.initialize();
+    }
+
+    /**
+     * Call parse method from option in flag index
+     */
+    parseFlag(flag: string, input: InputInterface, output: OutputInterface) {
+
+        if (!this._flags[flag])
             throw new Error('Unexpected option: ' + flag);
-        }
+
+        super.parseFlag(flag, input, output);
     }
 }
