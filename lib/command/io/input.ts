@@ -1,4 +1,4 @@
-import {InputInterface, OutputInterface} from '../command';
+import {InputInterface, OutputInterface} from '../../command';
 import {basename} from 'path';
 
 export class ArgvInput implements InputInterface {
@@ -27,16 +27,4 @@ export class ArgvInput implements InputInterface {
         this.exec = exec;
         this.argv = args;
     }
-}
-
-export class DummyOutput implements OutputInterface {
-    log(): void { }
-}
-
-export class ConsoleOutput implements OutputInterface {
-
-    log(msj: string, ...obj: Array<any>): void {
-        console.log(msj, ...obj);
-    }
-
 }
