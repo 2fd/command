@@ -15,12 +15,14 @@ describe('./lib/command/executor', () => {
         let exec = new ExecutorCommand;
 
         let exepectInstanceOutput = {
+            error(){},
             log(msj) {
                 expect(msj).to.be.eq('RemoteCommand OUTPUT LOG');
             }
         };
 
         let exepectQuickOutput = {
+            error(){},
             log(msj) {
                 expect(msj).to.be.eq('QuickCommand OUTPUT LOG');
             }
@@ -147,6 +149,7 @@ describe('./lib/command/executor', () => {
 
         it('help', () => {
             let helpOutput = {
+                error(){},  
                 log(msj) {
 
                     let node = basename(process.execPath);

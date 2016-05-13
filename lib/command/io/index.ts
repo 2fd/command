@@ -1,8 +1,11 @@
 import {ArgvInput} from './input';
-import {DummyOutput,ConsoleOutput} from './output';
+import {DummyOutput,ConsoleOutput, ColorConsoleOutput} from './output';
+import {Formatter, ColorFormatter} from './utils';
 
 export {
     ArgvInput,
     DummyOutput,
-    ConsoleOutput
+    ConsoleOutput,
+    Formatter,
+    ColorFormatter
 };

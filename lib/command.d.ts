@@ -1,5 +1,6 @@
 export interface OutputInterface {
     log(msj: string, ...obj: Array<any>): void;
+    error(msj: string, ...obj: Array<any>): void;
 }
 
 export interface InputInterface {
@@ -26,6 +27,11 @@ export interface FlagInterface {
     before(input: InputInterface, output: OutputInterface): void;
 
     parse(input: InputInterface, output: OutputInterface): void;
+}
+
+export interface FormatterInterface {
+    
+    format(str: string, ...replacements: Array<any>): string;
 }
 
 export interface CommandInterface {

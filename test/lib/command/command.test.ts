@@ -165,6 +165,7 @@ describe('./lib/command/command', () => {
 
             let exec = basename(process.execPath);
             let simpleCommandOutput = {
+                error(){},
                 log( help: string ) {
 
                     let result = '\n' +
@@ -194,6 +195,7 @@ describe('./lib/command/command', () => {
                 ]), simpleCommandOutput);
 
             let completeCommandOutput = {
+                error(){},
                 log( help: string ) {
 
                     let result = '\n' +

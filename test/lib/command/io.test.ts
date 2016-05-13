@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 import {basename} from 'path';
-import {ArgvInput} from '../../../lib/command/io';
+import {ArgvInput, Formatter, ColorFormatter} from '../../../lib/command/io';
 
 describe('./lib/command/io', () => {
 
