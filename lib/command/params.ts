@@ -3,7 +3,7 @@ import {
     InputValueList
 } from '../command';
 
-interface ParamValue {
+export interface ParamValue {
 
     require: boolean;
 

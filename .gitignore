@@ -13,3 +13,4 @@ typings
 
 # Conpiled files
 *.js
+*.d.ts

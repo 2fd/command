@@ -1,7 +1,7 @@
 import {Command} from './lib/command/command';
 import {ExecutorCommand} from './lib/command/executor';
 import {FlagConstructor, BoolanFlag, HelpFlag, NullFlag} from './lib/command/flags';
-import {ArgvInput, ConsoleOutput, DummyOutput} from './lib/command/io';
+import {ArgvInput, ConsoleOutput, ColorConsoleOutput, DummyOutput} from './lib/command/io';
 import {IgnoreParams, NoParams, Param} from './lib/command/params';
 import {QuickCommandProxy, StringCommandProxy} from './lib/command/proxy';
 
@@ -16,6 +16,7 @@ export {
     
     ArgvInput,
     ConsoleOutput,
+    ColorConsoleOutput,
     DummyOutput,
     
     IgnoreParams,

@@ -6,6 +6,7 @@ export {
     ArgvInput,
     DummyOutput,
     ConsoleOutput,
+    ColorConsoleOutput,
     Formatter,
     ColorFormatter
 };

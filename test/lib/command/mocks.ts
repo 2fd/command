@@ -2,11 +2,11 @@ import {
     InputInterface,
     OutputInterface,
     QuickCommandType
-} from '../../../lib/command.d.ts';
+} from '../../../lib/command';
 import {Command} from '../../../lib/command/command';
 import {NoParams} from '../../../lib/command/params';
 
-class RemoteCommand extends Command {
+export class RemoteCommand extends Command {
 
     description = 'Command: RemoteCommand';
 
@@ -22,8 +22,8 @@ class RemoteCommand extends Command {
 export let remoteCommand = new RemoteCommand;
 
 export let quickCommand: QuickCommandType =
-    function QuickCommand (input: InputInterface, output: OutputInterface) {
+    function QuickCommand(input: InputInterface, output: OutputInterface) {
         output.log('QuickCommand OUTPUT LOG');
     };
 
-    quickCommand.description = 'Command: quickCommand';
+quickCommand.description = 'Command: quickCommand';

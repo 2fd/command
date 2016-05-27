@@ -12,3 +12,4 @@ typings
 # Source files
 .gitignore
 *.ts
+!*.d.ts

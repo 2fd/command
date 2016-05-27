@@ -3,7 +3,9 @@
   "version": "0.3.0",
   "description": "Modular command line tool",
   "main": "index.js",
+  "typings": "index.d.ts",
   "scripts": {
+    "prepublish": "npm test & tsc -d -p . & tsc -p .",
     "test": "./node_modules/.bin/mocha"
   },
   "repository": {
