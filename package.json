@@ -5,7 +5,7 @@
   "main": "index.js",
   "typings": "index.d.ts",
   "scripts": {
-    "prepublish": "npm test & tsc -d -p . & tsc -p .",
+    "preversion": "npm test & tsc -d -p . & tsc -p .",
     "test": "./node_modules/.bin/mocha"
   },
   "repository": {
