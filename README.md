@@ -50,7 +50,7 @@ Command implementation
 
     import {
         Command,
-        BoolanFlag,
+        BooleanFlag,
         Param
     } from '@2fd/command';
 
@@ -62,7 +62,7 @@ Command implementation
         params = new Param('requireParam [optionalParam] [...optionalParamList]');
 
         flags = [
-            new BoolanFlag('force', ['--force', '-f'], 'Force flag'),
+            new BooleanFlag('force', ['--force', '-f'], 'Force flag'),
         ];
 
         // action(input, output) { }; in javascript

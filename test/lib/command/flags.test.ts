@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 import {ArgvInput} from '../../../lib/command/io';
-import {NullFlag, BoolanFlag} from '../../../lib/command/flags';
+import {NullFlag, BooleanFlag} from '../../../lib/command/flags';
 
 describe('./lib/command/flags', () => {
 
@@ -14,9 +14,9 @@ describe('./lib/command/flags', () => {
         });
     });
 
-    describe('BoolanFlag', () => {
+    describe('BooleanFlag', () => {
 
-        let booleanFlag = new BoolanFlag('bool', ['--boolean', '-b'], 'Define TRUE|FALSE flag');
+        let booleanFlag = new BooleanFlag('bool', ['--boolean', '-b'], 'Define TRUE|FALSE flag');
 
         it('define FALSE by default', () => {
 

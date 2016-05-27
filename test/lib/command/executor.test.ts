@@ -6,7 +6,7 @@ import {ExecutorCommand}                 from '../../../lib/command/executor';
 import {ArgvInput}                       from '../../../lib/command/io';
 import {Command}                         from '../../../lib/command/command';
 import {Param, NoParams}                 from '../../../lib/command/params';
-import {NullFlag, BoolanFlag}            from '../../../lib/command/flags';
+import {NullFlag, BooleanFlag}            from '../../../lib/command/flags';
 
 describe('./lib/command/executor', () => {
 

@@ -4,7 +4,7 @@ import {InputInterface, OutputInterface} from '../../../lib/command';
 import {ArgvInput, DummyOutput} from '../../../lib/command/io';
 import {Command} from '../../../lib/command/command';
 import {Param, NoParams} from '../../../lib/command/params';
-import {NullFlag, BoolanFlag} from '../../../lib/command/flags';
+import {NullFlag, BooleanFlag} from '../../../lib/command/flags';
 
 describe('./lib/command/command', () => {
 
@@ -65,8 +65,8 @@ describe('./lib/command/command', () => {
                 params = new NoParams();
 
                 flags = [
-                    new BoolanFlag('flag1', ['-f'], 'flag1 description'),
-                    new BoolanFlag('flag2', ['-f'], 'flag1 description')
+                    new BooleanFlag('flag1', ['-f'], 'flag1 description'),
+                    new BooleanFlag('flag2', ['-f'], 'flag1 description')
                 ];
 
                 action() { }
@@ -83,8 +83,8 @@ describe('./lib/command/command', () => {
                 params = new NoParams();
 
                 flags = [
-                    new BoolanFlag('FlagName', ['-a'], 'flagA description'),
-                    new BoolanFlag('FlagName', ['-b'], 'flagB description')
+                    new BooleanFlag('FlagName', ['-a'], 'flagA description'),
+                    new BooleanFlag('FlagName', ['-b'], 'flagB description')
                 ];
 
                 action() { }
@@ -214,7 +214,7 @@ describe('./lib/command/command', () => {
                 description = 'Complete COMMAND';
                 params = new Param('require [...optionalList]');
                 flags = [
-                    new BoolanFlag('flag', ['-f', '--flags'], 'FLAG Description')
+                    new BooleanFlag('flag', ['-f', '--flags'], 'FLAG Description')
                 ];
                 action() { }
             }

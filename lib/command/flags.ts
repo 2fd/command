@@ -64,7 +64,7 @@ export class FlagConstructor {
     }
 }
 
-export class BoolanFlag extends FlagConstructor implements FlagInterface {
+export class BooleanFlag extends FlagConstructor implements FlagInterface {
 
     constructor(
         name?: string,
@@ -85,7 +85,7 @@ export class BoolanFlag extends FlagConstructor implements FlagInterface {
     }
 }
 
-export class HelpFlag extends BoolanFlag implements FlagInterface {
+export class HelpFlag extends BooleanFlag implements FlagInterface {
 
     constructor(
         name = 'help',
