@@ -1,12 +1,12 @@
 import {expect} from 'chai';
 import {basename} from 'path';
-import {remoteCommand, quickCommand}     from './mocks';
-import {InputInterface, OutputInterface} from '../../../lib/command';
-import {ExecutorCommand}                 from '../../../lib/command/executor';
-import {ArgvInput}                       from '../../../lib/command/io';
-import {Command}                         from '../../../lib/command/command';
-import {Param, NoParams}                 from '../../../lib/command/params';
-import {NullFlag, BooleanFlag}            from '../../../lib/command/flags';
+import {remoteCommand, quickCommand} from './mocks';
+import {InputInterface, OutputInterface} from '../../../lib/interfaces';
+import {ExecutorCommand} from '../../../lib/command/executor';
+import {ArgvInput} from '../../../lib/command/io';
+import {Command} from '../../../lib/command/command';
+import {Param, NoParams} from '../../../lib/command/params';
+import {NullFlag, BooleanFlag} from '../../../lib/command/flags';
 
 describe('./lib/command/executor', () => {
 
@@ -15,14 +15,14 @@ describe('./lib/command/executor', () => {
         let exec = new ExecutorCommand;
 
         let exepectInstanceOutput = {
-            error(){},
+            error() { },
             log(msj) {
                 expect(msj).to.be.eq('RemoteCommand OUTPUT LOG');
             }
         };
 
         let exepectQuickOutput = {
-            error(){},
+            error() { },
             log(msj) {
                 expect(msj).to.be.eq('QuickCommand OUTPUT LOG');
             }
@@ -149,7 +149,7 @@ describe('./lib/command/executor', () => {
 
         it('help', () => {
             let helpOutput = {
-                error(){},  
+                error() { },
                 log(msj) {
 
                     let node = basename(process.execPath);
@@ -158,18 +158,18 @@ describe('./lib/command/executor', () => {
                         '\n\n' +
                         '    ' + 'Usage: ' + node + ' file.js [COMMAND]' +
                         '\n\n' +
-                        '    ' +  'instance          Command: RemoteCommand' + '\n' +
-                        '    ' +  'list:instace      Command: RemoteCommand' + '\n' +
-                        '    ' +  'list:quick        Command: quickCommand' + '\n' +
-                        '    ' +  'list:toInstace    Command: RemoteCommand' + '\n' +
-                        '    ' +  'list:toQuick      Command: quickCommand' + '\n' +
-                        '    ' +  'ns:instace        Command: RemoteCommand' + '\n' +
-                        '    ' +  'ns:quick          Command: quickCommand' + '\n' +
-                        '    ' +  'ns:toInstace      Command: RemoteCommand' + '\n' +
-                        '    ' +  'ns:toQuick        Command: quickCommand' + '\n' +
-                        '    ' +  'quick             Command: quickCommand' + '\n' +
-                        '    ' +  'toInstace         Command: RemoteCommand' + '\n' +
-                        '    ' +  'toQuick           Command: quickCommand' + '\n';
+                        '    ' + 'instance          Command: RemoteCommand' + '\n' +
+                        '    ' + 'list:instace      Command: RemoteCommand' + '\n' +
+                        '    ' + 'list:quick        Command: quickCommand' + '\n' +
+                        '    ' + 'list:toInstace    Command: RemoteCommand' + '\n' +
+                        '    ' + 'list:toQuick      Command: quickCommand' + '\n' +
+                        '    ' + 'ns:instace        Command: RemoteCommand' + '\n' +
+                        '    ' + 'ns:quick          Command: quickCommand' + '\n' +
+                        '    ' + 'ns:toInstace      Command: RemoteCommand' + '\n' +
+                        '    ' + 'ns:toQuick        Command: quickCommand' + '\n' +
+                        '    ' + 'quick             Command: quickCommand' + '\n' +
+                        '    ' + 'toInstace         Command: RemoteCommand' + '\n' +
+                        '    ' + 'toQuick           Command: quickCommand' + '\n';
 
                     expect(msj).to.be.eq(result);
                 }

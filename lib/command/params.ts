@@ -1,7 +1,7 @@
 import {
     ParamInterface,
     InputValueList
-} from '../command';
+} from '../interfaces';
 
 export interface ParamValue {
 

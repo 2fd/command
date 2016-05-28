@@ -7,7 +7,7 @@ import {
     InputInterface,
     OutputInterface,
     CommandInterface
-} from '../command';
+} from '../interfaces';
 
 import {
     HelpFlag

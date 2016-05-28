@@ -1,7 +1,7 @@
 import {
     InputInterface,
     FlagInterface
-} from '../command';
+} from '../interfaces';
 
 export class NullFlag implements FlagInterface {
 

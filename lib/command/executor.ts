@@ -8,7 +8,7 @@ import {
     QuickCommandType,
     FlagInterface,
     ParamInterface,
-} from '../command';
+} from '../interfaces';
 
 import {
     QuickCommandProxy,

@@ -1,4 +1,4 @@
-import {InputInterface, OutputInterface} from '../../command';
+import {InputInterface, OutputInterface} from '../../interfaces';
 import {basename} from 'path';
 
 export class ArgvInput implements InputInterface {

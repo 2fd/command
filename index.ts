@@ -1,28 +1,58 @@
-import {Command} from './lib/command/command';
-import {ExecutorCommand} from './lib/command/executor';
-import {FlagConstructor, BooleanFlag, HelpFlag, NullFlag} from './lib/command/flags';
-import {ArgvInput, ConsoleOutput, ColorConsoleOutput, DummyOutput} from './lib/command/io';
-import {IgnoreParams, NoParams, Param} from './lib/command/params';
-import {QuickCommandProxy, StringCommandProxy} from './lib/command/proxy';
+import {
+    CommandInterface,
+    InputInterface,
+    OutputInterface
+} from './lib/interfaces';
 
-export {
-    Command,
-    ExecutorCommand,
-    
+import {Command} from './lib/command/command';
+
+import {ExecutorCommand} from './lib/command/executor';
+
+import {
+    ArgvInput,
+    ConsoleOutput,
+    ColorConsoleOutput
+} from './lib/command/io';
+
+import {
+    IgnoreParams,
+    NoParams,
+    Param
+} from './lib/command/params';
+
+import {
     FlagConstructor,
     BooleanFlag,
     HelpFlag,
-    NullFlag,
+    NullFlag
+} from './lib/command/flags';
+
+export {
     
+    // interfaces
+    CommandInterface,
+    InputInterface,
+    OutputInterface,
+    
+    // commands
+    Command,
+    ExecutorCommand,
+    
+    // input
     ArgvInput,
+    
+    // output
     ConsoleOutput,
     ColorConsoleOutput,
-    DummyOutput,
     
+    // params
     IgnoreParams,
     NoParams,
     Param,
     
-    QuickCommandProxy,
-    StringCommandProxy
+    // flags
+    FlagConstructor,
+    BooleanFlag,
+    HelpFlag,
+    NullFlag,
 };

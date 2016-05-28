@@ -5,7 +5,7 @@ import {
     InputInterface,
     OutputInterface,
     CommandInterface
-} from '../command';
+} from '../interfaces';
 
 import {resolve} from 'path';
 import {toString} from './helper';

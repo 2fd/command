@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 import {basename} from 'path';
-import {InputInterface, OutputInterface} from '../../../lib/command';
+import {InputInterface, OutputInterface} from '../../../lib/interfaces';
 import {ArgvInput, DummyOutput} from '../../../lib/command/io';
 import {Command} from '../../../lib/command/command';
 import {Param, NoParams} from '../../../lib/command/params';

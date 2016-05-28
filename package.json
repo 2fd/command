@@ -5,7 +5,9 @@
   "main": "index.js",
   "typings": "index.d.ts",
   "scripts": {
-    "preversion": "npm test & tsc -d -p . & tsc -p .",
+    "compile": "tsc -p .",
+    "declaration": "tsc -d -p tsconfig.d.json",
+    "preversion": "npm test & npm run declaration & npm run compile",
     "test": "./node_modules/.bin/mocha"
   },
   "repository": {

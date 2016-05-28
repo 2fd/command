@@ -1,5 +1,5 @@
 import {format} from 'util';
-import {FormatterInterface} from '../../command';
+import {FormatterInterface} from '../../interfaces';
 
 const RESET = '\u001b[0m';
 const CSS_TO_COMMAND = {

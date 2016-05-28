@@ -1,4 +1,4 @@
-import {InputInterface, OutputInterface, FormatterInterface} from '../../command';
+import {InputInterface, OutputInterface, FormatterInterface} from '../../interfaces';
 import {Formatter, ColorFormatter} from './utils';
 
 export class DummyOutput implements OutputInterface {

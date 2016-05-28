@@ -2,7 +2,7 @@ import {
     InputInterface,
     OutputInterface,
     QuickCommandType
-} from '../../../lib/command';
+} from '../../../lib/interfaces';
 import {Command} from '../../../lib/command/command';
 import {NoParams} from '../../../lib/command/params';
 
