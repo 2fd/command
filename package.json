@@ -1,6 +1,6 @@
 {
   "name": "@2fd/command",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Modular command line tool",
   "main": "index.js",
   "typings": "index.d.ts",
