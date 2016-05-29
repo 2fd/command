@@ -27,6 +27,9 @@ function requireCommand(path: string): CommandInterface {
     } else if (Object(command) === command) {
         return <CommandInterface>command;
 
+    } else if (name && command === undefined) {
+        throw new Error(name + ' not found in ' + path);
+        
     } else {
         throw new Error(
             'Unexpected command type resolve: ' + path +
