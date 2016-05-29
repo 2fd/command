@@ -66,14 +66,6 @@ export class FlagConstructor {
 
 export class BooleanFlag extends FlagConstructor implements FlagInterface {
 
-    constructor(
-        name?: string,
-        list?: Array<string>,
-        description?: string
-    ) {
-        super(name, list, description);
-    }
-
     after(input: InputInterface): void { }
 
     before(input: InputInterface): void {
@@ -95,3 +87,4 @@ export class HelpFlag extends BooleanFlag implements FlagInterface {
         super(name, list, description);
     }
 }
+

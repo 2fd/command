@@ -82,7 +82,14 @@ export class ExecutorCommand implements CommandInterface {
             this.help(input, output);
 
         } else {
-            this._commands[command].handle(input, output);
+            
+            try {
+                this._commands[command].handle(input, output);
+            } catch (e) {
+                let err: Error = <Error>e;
+                output.error('%c' + err.message, 'background:red;color:white');
+                output.error(err.stack);
+            }
         }
     }
 

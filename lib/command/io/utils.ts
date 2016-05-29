@@ -1,8 +1,8 @@
 import {format} from 'util';
 import {FormatterInterface} from '../../interfaces';
 
-const RESET = '\u001b[0m';
-const CSS_TO_COMMAND = {
+export const RESET = '\u001b[0m';
+export const CSS_TO_COMMAND = {
     'font-weight:bold': '\u001b[1m',
     'font-weight:normal': '\u001b[2m',
     'font-style:italic': '\u001b[3m',
@@ -39,7 +39,7 @@ const CSS_TO_COMMAND = {
 
 export class Formatter {
     
-    reset: string = RESET;
+    reset: string;
     
     constructor(reset: string = ''){
         this.reset = this.translate(reset);
@@ -69,7 +69,7 @@ export class Formatter {
         let finalReplacement: typeof replacements = [];
         replacements = replacements.slice();
         
-        let finalStr = str.replace(/(%+[c|j|d|s|%])/g, (match: string) => {
+        let finalStr = str.replace(/(%+[c|j|i|f|o|O|d|s|%])/g, (match: string) => {
             
             // ignore if no more replacements
             if (replacements.length === 0)
@@ -97,19 +97,28 @@ export class Formatter {
                     placeholder = '%s';
                     break;
                     
+                case '%d': // node number placeholder
+                    typeof replacement === 'object' ?
+                        finalReplacement.push(NaN):
+                        finalReplacement.push(Number(replacement));
+                    break;
+                    
                 case '%i': // chrome integer placeholder
-                    finalReplacement.push(parseInt(replacement));
+                    typeof replacement === 'object' ?
+                        finalReplacement.push(NaN):
+                        finalReplacement.push(parseInt(replacement));
                     placeholder = '%d';
                     break;
                     
                 case '%f': // chrome float placeholder
-                    finalReplacement.push(parseFloat(replacement));
+                    typeof replacement === 'object' ?
+                        finalReplacement.push(NaN):
+                        finalReplacement.push(parseFloat(replacement));
                     placeholder = '%d';
                     break;
                     
                 case '%j': // node object placeholder
                 case '%s': // node string placeholder
-                case '%d': // node number placeholder
                     finalReplacement.push(replacement);
                     break;
                     
@@ -121,16 +130,18 @@ export class Formatter {
         });
         
         // native format
-        return format(finalStr + RESET, ...finalReplacement);
+        return format(finalStr + this.reset, ...finalReplacement);
     }
 }
 
 export class ColorFormatter extends Formatter {
     
+    reset: string = RESET;
+    
     translate(styles: string): string {
         
         if(typeof styles !== 'string')
-            return this.reset;
+            return this.reset || '';
         
         let commandStyles = styles
             .split(';')
