@@ -41,21 +41,29 @@ Modular command line interface
     - Re-implement and/or expand any functionality
 
     - Integrate commands created by third parties
+    
+- **Definitions included**
+
+    If you program in Typescript, definitions are included in the package
+    so they are available when you install as dependincie with `npm` without
+    requiring a definitions manager as `typings` or `tsd`
+    
 
 ## Usage
 
 Command implementation
 
-```javascript
+```typescript
 
     import {
         Command,
+        CommandInterface,
         BooleanFlag,
         Param
     } from '@2fd/command';
 
     // Object command implementation
-    class MyCommand extends Command {
+    class MyCommand extends Command implements CommandInterface {
 
         description = 'My Command description';
 
