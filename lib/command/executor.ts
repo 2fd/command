@@ -21,15 +21,7 @@ export class ExecutorCommand implements CommandInterface {
 
     _commands: CommnadList = {};
 
-    _description: string = '';
-
-    get description(): string {
-        return `${this._description} [v${this.version}]`;
-    }
-
-    set description(desc: string) {
-        this._description = desc;
-    }
+    description: string = '';
 
     version: string = '0.0.0';
 
@@ -93,32 +85,75 @@ export class ExecutorCommand implements CommandInterface {
         }
     }
 
-    help(input: InputInterface, output: OutputInterface) {
+    /**
+     * Print help info from command
+     */
+    help(input: InputInterface, output: OutputInterface): void {
 
         let ident = repeat(' ', TAB_SIZE);
+        let join = '\n' + ident;
+        let executable = input.exec.join(' ');
+        let helps: Array<string> = [];
+        let styles: Array<string> = [];
 
-        output.log([
-            '',
-            ident + this.description,
-            '',
-            ident + 'Usage: ' + input.exec.join(' ') + ' [COMMAND]',
-            '',
-            this.helpCommandList()
-        ].join('\n') + '\n');
+        helps.push('');
+        helps.push('%c' + this.helpDescription());
+        styles.push('color:green');
+        
+        helps.push('%c' + this.helpUsage(executable));
+        styles.push(''); // reset styles
+        
+        this.helpOptions()
+            .forEach((definition) => {
+                let [option, description] = definition;
+                let hasOption = !!option;
+                let hasDescription = !!description;
+                
+                if(!hasOption) {
+                    helps.push('%c');
+                    styles.push(''); // reset styles
+                
+                } else if (!hasDescription) {
+                    helps.push('%c' + option + ':');
+                    styles.push('color:yellow');
+                
+                } else {
+                    helps.push('%c' + option + '%c' + description);
+                    styles.push('color:green');
+                    styles.push(''); // reset styles
+                    
+                }
+            });
+        
+        output.log(helps.join(join) + '\n', ...styles);
     }
 
-    helpCommandList(): string {
+    /**
+     * Return command description
+     */
+    helpDescription(): string {
+        return this.description + ' [v' + this.version + ']\n';
+    }
+
+    /**
+     * Return usage description
+     */
+    helpUsage(executable: string): string {
+        return 'Usage: ' + executable + ' [COMMAND]\n';
+    }
+
+    helpOptions(): Array<string[]> {
 
         let commands = Object.keys(this._commands);
-        let commandLengths = commands.map(command => command.length);
-        let max = Math.max(...commandLengths);
-        let ident = repeat(' ', TAB_SIZE);
-
-        let commandDescriptions = commands.sort().map(command => {
+        let max = Math.max(
+            ...commands.map(command => command.length)
+        );
+        
+        return commands.sort().map(command => {
+            
             let space = repeat(' ', max - command.length + TAB_SIZE);
-            return ident + command + space + this._commands[command].description;
+            
+            return [command + space, this._commands[command].description];
         });
-
-        return commandDescriptions.join('\n');
     }
 }

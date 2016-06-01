@@ -92,7 +92,7 @@ export class SoftCommand implements CommandInterface {
 
             param[0] === '-' ?
                 this.parseFlag(param, input, output) :
-                this.params.push(param);
+                this.parseParam(param);
         }
 
         if (input.flags[this.helpFlag.name]) {
@@ -117,22 +117,46 @@ export class SoftCommand implements CommandInterface {
         let styles: Array<string> = [];
 
         helps.push('');
-        helps.push('%c' + this.helpUsage(executable));
+        helps.push('%c' + this.helpDescription());
         styles.push('color:green');
         
-        helps.push('%c' + this.helpDescription());
+        helps.push('%c' + this.helpUsage(executable));
         styles.push(''); // reset styles
         
-        this.helpFlagList()
+        this.helpOptions()
             .forEach((definition) => {
-                let [flags, description] = definition;
+                let [option, description] = definition;
+                let hasOption = !!option;
+                let hasDescription = !!description;
                 
-                helps.push('%c' + flags + '%c' + description)
-                styles.push('color:green');
-                styles.push(''); // reset styles
+                if(!hasOption) {
+                    helps.push('%c');
+                    styles.push(''); // reset styles
+                
+                } else if (!hasDescription) {
+                    helps.push('%c' + option + ':');
+                    styles.push('color:yellow');
+                
+                } else {
+                    helps.push('%c' + option + '%c' + description);
+                    styles.push('color:green');
+                    styles.push(''); // reset styles
+                    
+                }
             });
         
         output.log(helps.join(join) + '\n', ...styles)
+    }
+
+    /**
+     * Return command description
+     */
+    helpDescription(): string {
+
+        if (this.description)
+            return this.description + '\n';
+
+        return '';
     }
 
     /**
@@ -151,20 +175,9 @@ export class SoftCommand implements CommandInterface {
     }
 
     /**
-     * Return command description
-     */
-    helpDescription(): string {
-
-        if (this.description)
-            return this.description + '\n';
-
-        return '';
-    }
-
-    /**
      * Return flags description
      */
-    helpFlagList(): Array<string[]> {
+    helpOptions(): Array<string[]> {
 
         let flags = this.flags
             .filter(flag => !!flag.list.length);
@@ -188,8 +201,14 @@ export class SoftCommand implements CommandInterface {
      * Call parse method from option in flag index
      */
     parseFlag(flag: string, input: InputInterface, output: OutputInterface) {
-
         this._flags[flag].parse(input, output);
+    }
+    
+    /**
+     * 
+     */
+    parseParam(param: string) {
+        this.params.push(param);
     }
 }
 

@@ -4,6 +4,7 @@ import {remoteCommand, quickCommand} from './mocks';
 import {InputInterface, OutputInterface} from '../../../lib/interfaces';
 import {ExecutorCommand} from '../../../lib/command/executor';
 import {ArgvInput} from '../../../lib/command/io';
+import {OuputExpected} from '../../../lib/command/io/output';
 import {Command} from '../../../lib/command/command';
 import {Param, NoParams} from '../../../lib/command/params';
 import {NullFlag, BooleanFlag} from '../../../lib/command/flags';
@@ -32,7 +33,8 @@ describe('./lib/command/executor', () => {
         exec.version = '0.1.0';
         exec.description = 'ExecutorCommand Test';
         it('property description', () => {
-            expect(exec.description).to.be.eq('ExecutorCommand Test [v0.1.0]')
+            expect(exec.description).to.be.eq('ExecutorCommand Test')
+            expect(exec.helpDescription()).to.be.eq('ExecutorCommand Test [v0.1.0]\n')
         });
 
         describe('method addCommand', () => {
@@ -148,39 +150,57 @@ describe('./lib/command/executor', () => {
         });
 
         it('help', () => {
-            let helpOutput = {
-                error() { },
-                log(msj) {
-
-                    let node = basename(process.execPath);
-                    let result = '\n' +
-                        '    ' + 'ExecutorCommand Test [v0.1.0]' +
+            
+            let node = basename(process.execPath);
+            let expectOutput = new OuputExpected([
+                (help: string, ...styles:string[]) => {
+                    
+                    expect(help).to.be.eq(
+                        '\n' +
+                        '    ' + '%cExecutorCommand Test [v0.1.0]' +
                         '\n\n' +
-                        '    ' + 'Usage: ' + node + ' file.js [COMMAND]' +
+                        '    ' + '%cUsage: ' + node + ' file.js [COMMAND]' +
                         '\n\n' +
-                        '    ' + 'instance          Command: RemoteCommand' + '\n' +
-                        '    ' + 'list:instace      Command: RemoteCommand' + '\n' +
-                        '    ' + 'list:quick        Command: quickCommand' + '\n' +
-                        '    ' + 'list:toInstace    Command: RemoteCommand' + '\n' +
-                        '    ' + 'list:toQuick      Command: quickCommand' + '\n' +
-                        '    ' + 'ns:instace        Command: RemoteCommand' + '\n' +
-                        '    ' + 'ns:quick          Command: quickCommand' + '\n' +
-                        '    ' + 'ns:toInstace      Command: RemoteCommand' + '\n' +
-                        '    ' + 'ns:toQuick        Command: quickCommand' + '\n' +
-                        '    ' + 'quick             Command: quickCommand' + '\n' +
-                        '    ' + 'toInstace         Command: RemoteCommand' + '\n' +
-                        '    ' + 'toQuick           Command: quickCommand' + '\n';
-
-                    expect(msj).to.be.eq(result);
+                        '    ' + '%cinstance          %cCommand: RemoteCommand' + '\n' +
+                        '    ' + '%clist:instace      %cCommand: RemoteCommand' + '\n' +
+                        '    ' + '%clist:quick        %cCommand: quickCommand' + '\n' +
+                        '    ' + '%clist:toInstace    %cCommand: RemoteCommand' + '\n' +
+                        '    ' + '%clist:toQuick      %cCommand: quickCommand' + '\n' +
+                        '    ' + '%cns:instace        %cCommand: RemoteCommand' + '\n' +
+                        '    ' + '%cns:quick          %cCommand: quickCommand' + '\n' +
+                        '    ' + '%cns:toInstace      %cCommand: RemoteCommand' + '\n' +
+                        '    ' + '%cns:toQuick        %cCommand: quickCommand' + '\n' +
+                        '    ' + '%cquick             %cCommand: quickCommand' + '\n' +
+                        '    ' + '%ctoInstace         %cCommand: RemoteCommand' + '\n' +
+                        '    ' + '%ctoQuick           %cCommand: quickCommand' + '\n'
+                    );
+                    
+                    expect(styles).to.be.deep.equal([
+                        'color:green', // description
+                        '', // usage
+                        'color:green', '', // instace
+                        'color:green', '', // list:instace
+                        'color:green', '', // list:quick
+                        'color:green', '', // list:toInstace
+                        'color:green', '', // list:toQuick
+                        'color:green', '', // ns:instace
+                        'color:green', '', // ns:quick
+                        'color:green', '', // ns:toInstace
+                        'color:green', '', // ns:toQuick
+                        'color:green', '', // quick
+                        'color:green', '', // toInstace
+                        'color:green', '', // toQuick
+                    ]);
+                    
                 }
-            };
+            ]);
 
             exec.handle(
                 new ArgvInput([
                     process.execPath,
                     'file.js'
                 ]),
-                helpOutput
+                expectOutput
             );
         });
 

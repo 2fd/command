@@ -178,17 +178,17 @@ describe('./lib/command/command', () => {
                 (help: string, ...styles: string[]) => {
                     expect(help).to.be.eq(
                         '\n' +
-                        '    ' + '%cUsage: ' + exec + ' file.js [OPTIONS]  ' +
-                        '\n\n' +
                         '    ' + '%cSimple COMMAND' +
+                        '\n\n' +
+                        '    ' + '%cUsage: ' + exec + ' file.js [OPTIONS]  ' +
                         '\n\n' +
                         '    ' + '%c--help, -h    %cPrint this help' +
                         '\n'
                     )
                     
                     expect(styles).to.be.deep.equal([
-                        'color:green', // usage
-                        '', // description
+                        'color:green', // description
+                        '', // usage
                         'color:green', '' // help flag
                     ]);
                 },
@@ -216,17 +216,17 @@ describe('./lib/command/command', () => {
                 (help: string, ...styles: string[]) => {
                     expect(help).to.be.eq(
                         '\n' +
-                        '    ' + '%cUsage: ' + exec + ' file.js [OPTIONS] require [...optionalList] ' +
-                        '\n\n' +
                         '    ' + '%cComplete COMMAND' +
+                        '\n\n' +
+                        '    ' + '%cUsage: ' + exec + ' file.js [OPTIONS] require [...optionalList] ' +
                         '\n\n' +
                         '    ' + '%c-f, --flags    %cFLAG Description' + '\n' +
                         '    ' + '%c--help, -h     %cPrint this help' + '\n'
                     )
                     
                     expect(styles).to.be.deep.equal([
-                        'color:green', // usage
-                        '', // description
+                        'color:green', // description
+                        '', // usage
                         'color:green', '', // f flag
                         'color:green', '', // help flag
                     ])
