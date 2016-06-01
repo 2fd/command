@@ -53,10 +53,10 @@ export class SoftCommand implements CommandInterface {
      * Add option list and help flags to flag index
      */
     initialize() {
-        
-        if(this._flags)
+
+        if (this._flags)
             return;
-            
+
         this._flags = {}
         this.helpFlag = this.helpFlag || new HelpFlag;
         this.flags.push(this.helpFlag);
@@ -111,19 +111,28 @@ export class SoftCommand implements CommandInterface {
     help(input: InputInterface, output: OutputInterface): void {
 
         let ident = repeat(' ', TAB_SIZE);
+        let join = '\n' + ident;
+        let executable = input.exec.join(' ');
+        let helps: Array<string> = [];
+        let styles: Array<string> = [];
+
+        helps.push('');
+        helps.push('%c' + this.helpUsage(executable));
+        styles.push('color:green');
         
-        output.log([
-            '',
-            ident + this.helpUsage(input.exec.join(' ')),
-            ident + this.helpDescription(),
-            ident + this.helpFlagList()
-                .map((definition) => {
-                    let [flags, description] = definition;
-                    
-                    return flags + description;
-                })
-                .join('\n' + ident)
-        ].join('\n') + '\n');
+        helps.push('%c' + this.helpDescription());
+        styles.push(''); // reset styles
+        
+        this.helpFlagList()
+            .forEach((definition) => {
+                let [flags, description] = definition;
+                
+                helps.push('%c' + flags + '%c' + description)
+                styles.push('color:green');
+                styles.push(''); // reset styles
+            });
+        
+        output.log(helps.join(join) + '\n', ...styles)
     }
 
     /**
@@ -140,7 +149,7 @@ export class SoftCommand implements CommandInterface {
 
         return `Usage: ${executable} ${options} ${paramDefinition} \n`;
     }
-    
+
     /**
      * Return command description
      */
@@ -171,7 +180,7 @@ export class SoftCommand implements CommandInterface {
             let ident = repeat(' ', TAB_SIZE);
             let space = repeat(' ', max - flag.length + TAB_SIZE);
 
-            return [flag + space,  flags[i].description];
+            return [flag + space, flags[i].description];
         });
     }
 
@@ -191,14 +200,14 @@ type FlagSet = {
 /**
  * Base implementation from command
  */
-export class Command  extends SoftCommand implements CommandInterface {
+export class Command extends SoftCommand implements CommandInterface {
 
     /**
      * Add option to flag index
      */
     addFlag(flag: FlagInterface): this {
-        
-        let command = (<any & {name: string}>this.constructor).name;
+
+        let command = (<any & { name: string }>this.constructor).name;
 
         flag
             .list
@@ -206,40 +215,40 @@ export class Command  extends SoftCommand implements CommandInterface {
                 if (this._flags[f])
                     throw new Error(`Cannot overwrite flag ${f} in command ${command}`);
             });
-        
+
         super.addFlag(flag);
 
         return this;
     }
-    
-    initialize(){
-        
-        if(this._flags)
+
+    initialize() {
+
+        if (this._flags)
             return;
-        
-        let command = (<any & {name: string}>this.constructor).name;
-        
-        if(!this.params)
+
+        let command = (<any & { name: string }>this.constructor).name;
+
+        if (!this.params)
             throw new Error('Command must be define params property');
-            
-        if(!Array.isArray(this.flags))
+
+        if (!Array.isArray(this.flags))
             throw new Error('Command must be define flag list property');
-            
+
         this
             .flags
             .reduce<FlagSet>(
-                (index, flag: FlagInterface): FlagSet => {
-                    
-                    if(index[flag.name])
-                        throw new Error(`Cannot overwrite flag with name ${flag.name} in command ${command}`);
-                    
-                    index[flag.name] = true;
-                    
-                    return index;
-                },
-                {}
+            (index, flag: FlagInterface): FlagSet => {
+
+                if (index[flag.name])
+                    throw new Error(`Cannot overwrite flag with name ${flag.name} in command ${command}`);
+
+                index[flag.name] = true;
+
+                return index;
+            },
+            {}
             );
-        
+
         super.initialize();
     }
 

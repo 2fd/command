@@ -175,15 +175,23 @@ describe('./lib/command/command', () => {
             
             let expectSimpleOutput = new OuputExpected([
                 
-                (help: string) => expect(help).to.be.eq(
-                    '\n' +
-                    '    ' + 'Usage: ' + exec + ' file.js [OPTIONS]  ' +
-                    '\n\n' +
-                    '    ' + 'Simple COMMAND' +
-                    '\n\n' +
-                    '    ' + '--help, -h    Print this help' +
-                    '\n'
-                ),
+                (help: string, ...styles: string[]) => {
+                    expect(help).to.be.eq(
+                        '\n' +
+                        '    ' + '%cUsage: ' + exec + ' file.js [OPTIONS]  ' +
+                        '\n\n' +
+                        '    ' + '%cSimple COMMAND' +
+                        '\n\n' +
+                        '    ' + '%c--help, -h    %cPrint this help' +
+                        '\n'
+                    )
+                    
+                    expect(styles).to.be.deep.equal([
+                        'color:green', // usage
+                        '', // description
+                        'color:green', '' // help flag
+                    ]);
+                },
                 
             ]);
 
@@ -205,15 +213,25 @@ describe('./lib/command/command', () => {
                 
             let expectCompleteOutput = new OuputExpected([
                 
-                (help: string) => expect(help).to.be.eq(
-                    '\n' +
-                    '    ' + 'Usage: ' + exec + ' file.js [OPTIONS] require [...optionalList] ' +
-                    '\n\n' +
-                    '    ' + 'Complete COMMAND' +
-                    '\n\n' +
-                    '    ' + '-f, --flags    FLAG Description' + '\n' +
-                    '    ' + '--help, -h     Print this help' + '\n'
-                ),
+                (help: string, ...styles: string[]) => {
+                    expect(help).to.be.eq(
+                        '\n' +
+                        '    ' + '%cUsage: ' + exec + ' file.js [OPTIONS] require [...optionalList] ' +
+                        '\n\n' +
+                        '    ' + '%cComplete COMMAND' +
+                        '\n\n' +
+                        '    ' + '%c-f, --flags    %cFLAG Description' + '\n' +
+                        '    ' + '%c--help, -h     %cPrint this help' + '\n'
+                    )
+                    
+                    expect(styles).to.be.deep.equal([
+                        'color:green', // usage
+                        '', // description
+                        'color:green', '', // f flag
+                        'color:green', '', // help flag
+                    ])
+                    
+                },
                 
             ]);
 
