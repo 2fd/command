@@ -110,28 +110,35 @@ export class SoftCommand implements CommandInterface {
      */
     help(input: InputInterface, output: OutputInterface): void {
 
+        let ident = repeat(' ', TAB_SIZE);
+        
         output.log([
             '',
-            this.helpUsage(input),
-            this.helpDescription(),
-            this.helpFlagList(input)
-        ].join('\n'));
+            ident + this.helpUsage(input.exec.join(' ')),
+            ident + this.helpDescription(),
+            ident + this.helpFlagList()
+                .map((definition) => {
+                    let [flags, description] = definition;
+                    
+                    return flags + description;
+                })
+                .join('\n' + ident)
+        ].join('\n') + '\n');
     }
 
     /**
      * Return usage description
      */
-    helpUsage(input: InputInterface): string {
+    helpUsage(executable: string): string {
 
         let hasFlags = this.flags
             .filter(flag => !!flag.list.length)
             .length;
 
-        let execution = input.exec.join(' ');
         let options = hasFlags ? '[OPTIONS]' : '';
         let paramDefinition = this.params.definition;
 
-        return repeat(' ', TAB_SIZE) + `Usage: ${execution} ${options} ${paramDefinition} \n`;
+        return `Usage: ${executable} ${options} ${paramDefinition} \n`;
     }
     
     /**
@@ -140,7 +147,7 @@ export class SoftCommand implements CommandInterface {
     helpDescription(): string {
 
         if (this.description)
-            return repeat(' ', TAB_SIZE) + this.description + '\n';
+            return this.description + '\n';
 
         return '';
     }
@@ -148,7 +155,7 @@ export class SoftCommand implements CommandInterface {
     /**
      * Return flags description
      */
-    helpFlagList(input: InputInterface): string {
+    helpFlagList(): Array<string[]> {
 
         let flags = this.flags
             .filter(flag => !!flag.list.length);
@@ -164,8 +171,8 @@ export class SoftCommand implements CommandInterface {
             let ident = repeat(' ', TAB_SIZE);
             let space = repeat(' ', max - flag.length + TAB_SIZE);
 
-            return ident + flag + space + flags[i].description;
-        }).join('\n') + '\n';
+            return [flag + space,  flags[i].description];
+        });
     }
 
     /**

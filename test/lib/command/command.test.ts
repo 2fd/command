@@ -2,6 +2,7 @@ import {expect} from 'chai';
 import {basename} from 'path';
 import {InputInterface, OutputInterface} from '../../../lib/interfaces';
 import {ArgvInput, DummyOutput} from '../../../lib/command/io';
+import {OuputExpected} from '../../../lib/command/io/output';
 import {Command} from '../../../lib/command/command';
 import {Param, NoParams} from '../../../lib/command/params';
 import {NullFlag, BooleanFlag} from '../../../lib/command/flags';
@@ -164,21 +165,6 @@ describe('./lib/command/command', () => {
         it('help flag log command information', () => {
 
             let exec = basename(process.execPath);
-            let simpleCommandOutput = {
-                error(){},
-                log( help: string ) {
-
-                    let result = '\n' +
-                            '    ' + 'Usage: ' + exec + ' file.js [OPTIONS]  ' +
-                            '\n\n' +
-                            '    ' + 'Simple COMMAND' +
-                            '\n\n' +
-                            '    ' + '--help, -h    Print this help' +
-                            '\n';
-
-                    expect(help).to.be.eq(result);
-                }
-            };
 
             class SimpleCommand extends Command {
                 description = 'Simple COMMAND';
@@ -186,29 +172,27 @@ describe('./lib/command/command', () => {
                 flags = [];
                 action() { }
             }
+            
+            let expectSimpleOutput = new OuputExpected([
+                
+                (help: string) => expect(help).to.be.eq(
+                    '\n' +
+                    '    ' + 'Usage: ' + exec + ' file.js [OPTIONS]  ' +
+                    '\n\n' +
+                    '    ' + 'Simple COMMAND' +
+                    '\n\n' +
+                    '    ' + '--help, -h    Print this help' +
+                    '\n'
+                ),
+                
+            ]);
 
             (new SimpleCommand)
                 .handle(new ArgvInput([
                     process.execPath,
                     'file.js',
                     '--help'
-                ]), simpleCommandOutput);
-
-            let completeCommandOutput = {
-                error(){},
-                log( help: string ) {
-
-                    let result = '\n' +
-                            '    ' + 'Usage: ' + exec + ' file.js [OPTIONS] require [...optionalList] ' +
-                            '\n\n' +
-                            '    ' + 'Complete COMMAND' +
-                            '\n\n' +
-                            '    ' + '-f, --flags    FLAG Description' + '\n' +
-                            '    ' + '--help, -h     Print this help' + '\n';
-
-                    expect(help).to.be.eq(result);
-                }
-            };
+                ]), expectSimpleOutput);
 
             class CompleteCommand extends Command {
                 description = 'Complete COMMAND';
@@ -218,13 +202,27 @@ describe('./lib/command/command', () => {
                 ];
                 action() { }
             }
+                
+            let expectCompleteOutput = new OuputExpected([
+                
+                (help: string) => expect(help).to.be.eq(
+                    '\n' +
+                    '    ' + 'Usage: ' + exec + ' file.js [OPTIONS] require [...optionalList] ' +
+                    '\n\n' +
+                    '    ' + 'Complete COMMAND' +
+                    '\n\n' +
+                    '    ' + '-f, --flags    FLAG Description' + '\n' +
+                    '    ' + '--help, -h     Print this help' + '\n'
+                ),
+                
+            ]);
 
             (new CompleteCommand)
                 .handle(new ArgvInput([
                     process.execPath,
                     'file.js',
                     '--help'
-                ]), completeCommandOutput);
+                ]), expectCompleteOutput);
 
         });
     });
