@@ -190,7 +190,7 @@ export class SoftCommand implements CommandInterface {
         );
         
         let helpTitle = [
-            ['Options:']
+            ['OPTIONS:']
         ];
         
         let helpFlags = flagList.map((flag, i) => {

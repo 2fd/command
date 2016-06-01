@@ -161,6 +161,7 @@ describe('./lib/command/executor', () => {
                         '\n\n' +
                         '    ' + '%cUsage: ' + node + ' file.js [COMMAND]' +
                         '\n\n' +
+                        '    ' + '%cCOMMAND:' + '\n' +
                         '    ' + '%cinstance          %cCommand: RemoteCommand' + '\n' +
                         '    ' + '%clist:instace      %cCommand: RemoteCommand' + '\n' +
                         '    ' + '%clist:quick        %cCommand: quickCommand' + '\n' +
@@ -178,6 +179,7 @@ describe('./lib/command/executor', () => {
                     expect(styles).to.be.deep.equal([
                         'color:green', // description
                         '', // usage
+                        'color:yellow', // options title
                         'color:green', '', // instace
                         'color:green', '', // list:instace
                         'color:green', '', // list:quick

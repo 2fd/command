@@ -182,7 +182,7 @@ describe('./lib/command/command', () => {
                         '\n\n' +
                         '    ' + '%cUsage: ' + exec + ' file.js [OPTIONS]  ' +
                         '\n\n' +
-                        '    ' + '%cOptions:' + '\n' +
+                        '    ' + '%cOPTIONS:' + '\n' +
                         '    ' + '%c--help, -h    %cPrint this help' +
                         '\n'
                     )
@@ -222,7 +222,7 @@ describe('./lib/command/command', () => {
                         '\n\n' +
                         '    ' + '%cUsage: ' + exec + ' file.js [OPTIONS] require [...optionalList] ' +
                         '\n\n' +
-                        '    ' + '%cOptions:' + '\n' +
+                        '    ' + '%cOPTIONS:' + '\n' +
                         '    ' + '%c-f, --flags    %cFLAG Description' + '\n' +
                         '    ' + '%c--help, -h     %cPrint this help' + '\n'
                     )

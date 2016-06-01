@@ -114,7 +114,7 @@ export class ExecutorCommand implements CommandInterface {
                     styles.push(''); // reset styles
                 
                 } else if (!hasDescription) {
-                    helps.push('%c' + option + ':');
+                    helps.push('%c' + option);
                     styles.push('color:yellow');
                 
                 } else {
@@ -149,11 +149,17 @@ export class ExecutorCommand implements CommandInterface {
             ...commands.map(command => command.length)
         );
         
-        return commands.sort().map(command => {
+        let helpTitle = [
+            ['COMMAND:']
+        ];
+        
+        let helpCommands = commands.sort().map(command => {
             
             let space = repeat(' ', max - command.length + TAB_SIZE);
             
             return [command + space, this._commands[command].description];
         });
+        
+        return helpTitle.concat(helpCommands);
     }
 }
