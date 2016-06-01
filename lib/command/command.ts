@@ -134,7 +134,7 @@ export class SoftCommand implements CommandInterface {
                     styles.push(''); // reset styles
                 
                 } else if (!hasDescription) {
-                    helps.push('%c' + option + ':');
+                    helps.push('%c' + option);
                     styles.push('color:yellow');
                 
                 } else {
@@ -188,13 +188,19 @@ export class SoftCommand implements CommandInterface {
         let max = Math.max(
             ...flagList.map(flags => flags.length)
         );
-
-        return flagList.map((flag, i) => {
+        
+        let helpTitle = [
+            ['Options:']
+        ];
+        
+        let helpFlags = flagList.map((flag, i) => {
             let ident = repeat(' ', TAB_SIZE);
             let space = repeat(' ', max - flag.length + TAB_SIZE);
 
             return [flag + space, flags[i].description];
         });
+        
+        return helpTitle.concat(helpFlags);
     }
 
     /**

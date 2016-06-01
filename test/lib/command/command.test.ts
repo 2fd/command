@@ -182,6 +182,7 @@ describe('./lib/command/command', () => {
                         '\n\n' +
                         '    ' + '%cUsage: ' + exec + ' file.js [OPTIONS]  ' +
                         '\n\n' +
+                        '    ' + '%cOptions:' + '\n' +
                         '    ' + '%c--help, -h    %cPrint this help' +
                         '\n'
                     )
@@ -189,7 +190,8 @@ describe('./lib/command/command', () => {
                     expect(styles).to.be.deep.equal([
                         'color:green', // description
                         '', // usage
-                        'color:green', '' // help flag
+                        'color:yellow', // options title
+                        'color:green', '', // help flag
                     ]);
                 },
                 
@@ -220,6 +222,7 @@ describe('./lib/command/command', () => {
                         '\n\n' +
                         '    ' + '%cUsage: ' + exec + ' file.js [OPTIONS] require [...optionalList] ' +
                         '\n\n' +
+                        '    ' + '%cOptions:' + '\n' +
                         '    ' + '%c-f, --flags    %cFLAG Description' + '\n' +
                         '    ' + '%c--help, -h     %cPrint this help' + '\n'
                     )
@@ -227,6 +230,7 @@ describe('./lib/command/command', () => {
                     expect(styles).to.be.deep.equal([
                         'color:green', // description
                         '', // usage
+                        'color:yellow', // options title
                         'color:green', '', // f flag
                         'color:green', '', // help flag
                     ])
