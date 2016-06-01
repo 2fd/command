@@ -43,13 +43,13 @@ describe('./lib/command/io', () => {
             });
         });
     });
-    
+
     describe('Formatter', () => {
-        
+
         let formatter = new Formatter;
-        
+
         it('support string placeholder (%s)', () => {
-            
+
             expect(formatter.format(
                 'string:%s numericString:%s number:%s float:%s object:%s array:%s null:%s undefined:%s',
                 'string',
@@ -57,7 +57,7 @@ describe('./lib/command/io', () => {
                 1,
                 2.5,
                 {},
-                [1,2,3],
+                [1, 2, 3],
                 null,
                 undefined
             )).to.be.eq([
@@ -71,7 +71,7 @@ describe('./lib/command/io', () => {
                 'undefined:undefined'
             ].join(' '))
         })
-        
+
         it('support number placeholder (%d)', () => {
             expect(formatter.format(
                 'string:%d numericString:%d number:%d float:%d object:%d array:%d null:%d undefined:%d',
@@ -80,7 +80,7 @@ describe('./lib/command/io', () => {
                 1,
                 2.5,
                 {},
-                [1,2,3],
+                [1, 2, 3],
                 null,
                 undefined
             )).to.be.eq([
@@ -94,7 +94,7 @@ describe('./lib/command/io', () => {
                 'undefined:NaN'
             ].join(' '))
         })
-        
+
         it('support number placeholder (%i)', () => {
             expect(formatter.format(
                 'string:%i numericString:%i number:%i float:%i object:%i array:%i null:%i undefined:%i',
@@ -103,7 +103,7 @@ describe('./lib/command/io', () => {
                 1,
                 2.5,
                 {},
-                [1,2,3],
+                [1, 2, 3],
                 null,
                 undefined
             )).to.be.eq([
@@ -117,7 +117,7 @@ describe('./lib/command/io', () => {
                 'undefined:NaN'
             ].join(' '))
         })
-        
+
         it('support number placeholder (%f)', () => {
             expect(formatter.format(
                 'string:%f numericString:%f number:%f float:%f object:%f array:%f null:%f undefined:%f',
@@ -126,7 +126,7 @@ describe('./lib/command/io', () => {
                 1,
                 2.5,
                 {},
-                [1,2,3],
+                [1, 2, 3],
                 null,
                 undefined
             )).to.be.eq([
@@ -140,7 +140,7 @@ describe('./lib/command/io', () => {
                 'undefined:NaN'
             ].join(' '))
         })
-        
+
         it('support object placeholder (%j)', () => {
             expect(formatter.format(
                 'string:%j numericString:%j number:%j float:%j object:%j array:%j null:%j undefined:%j',
@@ -149,7 +149,7 @@ describe('./lib/command/io', () => {
                 1,
                 2.5,
                 {},
-                [1,2,3],
+                [1, 2, 3],
                 null,
                 undefined
             )).to.be.eq([
@@ -163,7 +163,7 @@ describe('./lib/command/io', () => {
                 'undefined:undefined'
             ].join(' '))
         })
-        
+
         it('support object placeholder (%o)', () => {
             expect(formatter.format(
                 'string:%o numericString:%o number:%o float:%o object:%o array:%o null:%o undefined:%o',
@@ -172,7 +172,7 @@ describe('./lib/command/io', () => {
                 1,
                 2.5,
                 {},
-                [1,2,3],
+                [1, 2, 3],
                 null,
                 undefined
             )).to.be.eq([
@@ -186,7 +186,7 @@ describe('./lib/command/io', () => {
                 'undefined:undefined'
             ].join(' '))
         })
-        
+
         it('support object placeholder (%O)', () => {
             expect(formatter.format(
                 'string:%O numericString:%O number:%O float:%O object:%O array:%O null:%O undefined:%O',
@@ -195,7 +195,7 @@ describe('./lib/command/io', () => {
                 1,
                 2.5,
                 {},
-                [1,2,3],
+                [1, 2, 3],
                 null,
                 undefined
             )).to.be.eq([
@@ -209,7 +209,7 @@ describe('./lib/command/io', () => {
                 'undefined:undefined'
             ].join(' '))
         })
-        
+
         it('support percent sign (%%)', () => {
             expect(formatter.format(
                 'string:%s string:%%s string:%%%s string:%%%%s string:%%%%%s',
@@ -222,7 +222,7 @@ describe('./lib/command/io', () => {
                 'string:%%3'
             ].join(' '))
         })
-        
+
         it('ignore styles placeholder (%c)', () => {
             expect(formatter.format(
                 'string:%c numericString:%c number:%c float:%c object:%c array:%c null:%c undefined:%c',
@@ -231,7 +231,7 @@ describe('./lib/command/io', () => {
                 1,
                 2.5,
                 {},
-                [1,2,3],
+                [1, 2, 3],
                 null,
                 undefined
             )).to.be.eq([
@@ -246,13 +246,13 @@ describe('./lib/command/io', () => {
             ].join(' '))
         })
     });
-    
+
     describe('ColorFormatter', () => {
-        
+
         let formatter = new ColorFormatter;
-        
+
         it('support string placeholder (%s)', () => {
-            
+
             expect(formatter.format(
                 'string:%s numericString:%s number:%s float:%s object:%s array:%s null:%s undefined:%s',
                 'string',
@@ -260,7 +260,7 @@ describe('./lib/command/io', () => {
                 1,
                 2.5,
                 {},
-                [1,2,3],
+                [1, 2, 3],
                 null,
                 undefined
             )).to.be.eq([
@@ -274,7 +274,7 @@ describe('./lib/command/io', () => {
                 'undefined:undefined\u001b[0m'
             ].join(' '))
         })
-        
+
         it('support number placeholder (%d)', () => {
             expect(formatter.format(
                 'string:%d numericString:%d number:%d float:%d object:%d array:%d null:%d undefined:%d',
@@ -283,7 +283,7 @@ describe('./lib/command/io', () => {
                 1,
                 2.5,
                 {},
-                [1,2,3],
+                [1, 2, 3],
                 null,
                 undefined
             )).to.be.eq([
@@ -297,7 +297,7 @@ describe('./lib/command/io', () => {
                 'undefined:NaN\u001b[0m'
             ].join(' '))
         })
-        
+
         it('support number placeholder (%i)', () => {
             expect(formatter.format(
                 'string:%i numericString:%i number:%i float:%i object:%i array:%i null:%i undefined:%i',
@@ -306,7 +306,7 @@ describe('./lib/command/io', () => {
                 1,
                 2.5,
                 {},
-                [1,2,3],
+                [1, 2, 3],
                 null,
                 undefined
             )).to.be.eq([
@@ -320,7 +320,7 @@ describe('./lib/command/io', () => {
                 'undefined:NaN\u001b[0m'
             ].join(' '))
         })
-        
+
         it('support number placeholder (%f)', () => {
             expect(formatter.format(
                 'string:%f numericString:%f number:%f float:%f object:%f array:%f null:%f undefined:%f',
@@ -329,7 +329,7 @@ describe('./lib/command/io', () => {
                 1,
                 2.5,
                 {},
-                [1,2,3],
+                [1, 2, 3],
                 null,
                 undefined
             )).to.be.eq([
@@ -343,7 +343,7 @@ describe('./lib/command/io', () => {
                 'undefined:NaN\u001b[0m'
             ].join(' '))
         })
-        
+
         it('support object placeholder (%j)', () => {
             expect(formatter.format(
                 'string:%j numericString:%j number:%j float:%j object:%j array:%j null:%j undefined:%j',
@@ -352,7 +352,7 @@ describe('./lib/command/io', () => {
                 1,
                 2.5,
                 {},
-                [1,2,3],
+                [1, 2, 3],
                 null,
                 undefined
             )).to.be.eq([
@@ -366,7 +366,7 @@ describe('./lib/command/io', () => {
                 'undefined:undefined\u001b[0m'
             ].join(' '))
         })
-        
+
         it('support object placeholder (%o)', () => {
             expect(formatter.format(
                 'string:%o numericString:%o number:%o float:%o object:%o array:%o null:%o undefined:%o',
@@ -375,7 +375,7 @@ describe('./lib/command/io', () => {
                 1,
                 2.5,
                 {},
-                [1,2,3],
+                [1, 2, 3],
                 null,
                 undefined
             )).to.be.eq([
@@ -389,7 +389,7 @@ describe('./lib/command/io', () => {
                 'undefined:undefined\u001b[0m'
             ].join(' '))
         })
-        
+
         it('support object placeholder (%O)', () => {
             expect(formatter.format(
                 'string:%O numericString:%O number:%O float:%O object:%O array:%O null:%O undefined:%O',
@@ -398,7 +398,7 @@ describe('./lib/command/io', () => {
                 1,
                 2.5,
                 {},
-                [1,2,3],
+                [1, 2, 3],
                 null,
                 undefined
             )).to.be.eq([
@@ -412,7 +412,7 @@ describe('./lib/command/io', () => {
                 'undefined:undefined\u001b[0m'
             ].join(' '))
         })
-        
+
         it('support percent sign (%%)', () => {
             expect(formatter.format(
                 'string:%s string:%%s string:%%%s string:%%%%s string:%%%%%s',
@@ -425,7 +425,7 @@ describe('./lib/command/io', () => {
                 'string:%%3\u001b[0m'
             ].join(' '))
         })
-        
+
         it('support styles placeholder (%c)', () => {
             expect(formatter.format(
                 'string:%c numericString:%c number:%c float:%c object:%c array:%c null:%c undefined:%c',
@@ -434,7 +434,7 @@ describe('./lib/command/io', () => {
                 1,
                 2.5,
                 {},
-                [1,2,3],
+                [1, 2, 3],
                 null,
                 undefined
             )).to.be.eq([
@@ -448,27 +448,27 @@ describe('./lib/command/io', () => {
                 'undefined:\u001b[0m\u001b[0m'
             ].join(' '))
         })
-        
+
         Object
             .keys(CSS_TO_COMMAND)
             .forEach((style) => {
-                
+
                 let code = CSS_TO_COMMAND[style];
-                
+
                 it(`support styles placeholder (%c: ${style})`, () => {
                     expect(formatter.format(
                         '%cStyle', style
                     )).to.be.eq(RESET + code + 'Style' + RESET)
                 })
             })
-            
+
         it(`support multiple styles in a single placeholder (%c)`, () => {
             expect(formatter.format(
                 '%cStyles1 %cStyles2', 'font-weight:bold; color:red', 'text-decoration:underline; color:white; background-color:blue'
             )).to.be.eq(
                 RESET + '\u001b[1m\u001b[31mStyles1 ' +
                 RESET + '\u001b[4m\u001b[37m\u001b[44mStyles2' + RESET
-            )
+                )
         })
     });
 });
