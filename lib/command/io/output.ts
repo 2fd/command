@@ -5,13 +5,13 @@ import {Formatter, ColorFormatter} from './utils';
 /**
  * Output from test
  */
-type logger = (msj: string, ...replacements: Array<any>) => void;
+export type logger = (msj: string, ...replacements: Array<any>) => void;
 
 export class OuputExpected implements OutputInterface {
 
     count = 0;
     
-    expectations: Array<logger>
+    expectations: Array<logger>;
 
     constructor(expectations: Array<logger>){
         this.expectations = expectations;
