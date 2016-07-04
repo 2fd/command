@@ -103,7 +103,7 @@ export class ExecutorCommand extends SoftCommand<ExecutorParams, ExecutorFlags> 
     }
 
     hasToConsume(input: InputInterface<ExecutorFlags, ExecutorParams>, output: OutputInterface): boolean {
-        return input.argv.length > 0 && !input.params.COMMAND;
+        return !input.params.COMMAND && super.hasToConsume(input, output);
     }
 
     /**
