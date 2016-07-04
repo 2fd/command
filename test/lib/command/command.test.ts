@@ -14,7 +14,7 @@ describe('./lib/command/command', () => {
         it('must define flags and params property and implement action method', () => {
 
             // EmptyCommandImplementation ---------------------
-            class EmptyCommandImplementation extends Command { }
+            class EmptyCommandImplementation extends Command<any, any> { }
 
             expect(() => {
                 (new EmptyCommandImplementation)
@@ -22,7 +22,7 @@ describe('./lib/command/command', () => {
             }).to.throw(Error, 'Command must be define params property');
 
             // ParamsCommandImplementation ---------------------
-            class ParamsCommandImplementation extends Command {
+            class ParamsCommandImplementation extends Command<any, any> {
                 params = new NoParams();
             }
 
@@ -32,7 +32,7 @@ describe('./lib/command/command', () => {
             }).to.throw(Error, 'Command must be define flag list property');
 
             // FlagssCommandImplementation --------------------
-            class FlagssCommandImplementation extends Command {
+            class FlagssCommandImplementation extends Command<any, any> {
                 params = new NoParams();
                 flags = [];
             }
@@ -43,7 +43,7 @@ describe('./lib/command/command', () => {
             }).to.throw(Error, 'Command must be implement action method');
 
             // MinimunCommandImplementation --------------------
-            class MinimunCommandImplementation extends Command {
+            class MinimunCommandImplementation extends Command<any, any> {
 
                 params = new NoParams();
 
@@ -61,7 +61,7 @@ describe('./lib/command/command', () => {
         it('flags can not be repeated', () => {
 
             // FlagRepeatCommand --------------------
-            class FlagRepeatCommand extends Command {
+            class FlagRepeatCommand extends Command<any, any> {
 
                 params = new NoParams();
 
@@ -79,7 +79,7 @@ describe('./lib/command/command', () => {
             }).to.throw(Error, 'Cannot overwrite flag -f in command FlagRepeatCommand');
 
             // FlagNameRepeatCommand --------------------
-            class FlagNameRepeatCommand extends Command {
+            class FlagNameRepeatCommand extends Command<any, any> {
 
                 params = new NoParams();
 
@@ -99,13 +99,13 @@ describe('./lib/command/command', () => {
         
         it('action method accept input and output param', () => {
 
-            class MinimunCommandImplementation extends Command {
+            class MinimunCommandImplementation extends Command<{}, {}> {
 
                 params = new NoParams();
 
                 flags = [];
 
-                action(input: InputInterface, output: OutputInterface) {
+                action(input: InputInterface<{}, {}>, output: OutputInterface) {
                     expect(input).to.be.a('object');
                     expect(input).to.be.a('object');
                 }
@@ -118,13 +118,13 @@ describe('./lib/command/command', () => {
         it('has a implicit help flag', () => {
 
             // HelpCommandImplementation --------------------
-            class HelpCommandImplementation extends Command {
+            class HelpCommandImplementation extends Command<{}, {help?: boolean}> {
 
                 params = new NoParams();
 
                 flags = [];
 
-                action(input: InputInterface) {
+                action(input: InputInterface<{}, {help?: boolean}>) {
                     expect(input).to.be.deep.equal({
                         argv: [],
                         exec: [],
@@ -140,13 +140,13 @@ describe('./lib/command/command', () => {
                 .handle(new ArgvInput([]), new DummyOutput);
 
             // HelpActiveCommandImplementation --------------------
-            class HelpActiveCommandImplementation extends Command {
+            class HelpActiveCommandImplementation extends Command<{}, {help?: boolean}> {
 
                 params = new NoParams();
 
                 flags = [];
 
-                action(input: InputInterface) {
+                action(input: InputInterface<{}, {help?: boolean}>) {
                     expect(input).to.be.deep.equal({
                         argv: [],
                         exec: [],
@@ -166,7 +166,7 @@ describe('./lib/command/command', () => {
 
             let exec = basename(process.execPath);
 
-            class SimpleCommand extends Command {
+            class SimpleCommand extends Command<{}, {help?: boolean}> {
                 description = 'Simple COMMAND';
                 params = new NoParams();
                 flags = [];
@@ -180,8 +180,9 @@ describe('./lib/command/command', () => {
                         '\n' +
                         '    ' + '%cSimple COMMAND' +
                         '\n\n' +
-                        '    ' + '%cUsage: ' + exec + ' file.js [OPTIONS]  ' +
+                        '    ' + '%cUsage: ' + exec + ' file.js [OPTIONS] ' +
                         '\n\n' +
+                        '    ' + '%c'         + '\n' +
                         '    ' + '%cOPTIONS:' + '\n' +
                         '    ' + '%c--help, -h    %cPrint this help' +
                         '\n'
@@ -190,6 +191,7 @@ describe('./lib/command/command', () => {
                     expect(styles).to.be.deep.equal([
                         'color:green', // description
                         '', // usage
+                        '', // start options
                         'color:yellow', // options title
                         'color:green', '', // help flag
                     ]);
@@ -204,7 +206,7 @@ describe('./lib/command/command', () => {
                     '--help'
                 ]), expectSimpleOutput);
 
-            class CompleteCommand extends Command {
+            class CompleteCommand extends Command<{}, {}> {
                 description = 'Complete COMMAND';
                 params = new Param('require [...optionalList]');
                 flags = [
@@ -220,8 +222,9 @@ describe('./lib/command/command', () => {
                         '\n' +
                         '    ' + '%cComplete COMMAND' +
                         '\n\n' +
-                        '    ' + '%cUsage: ' + exec + ' file.js [OPTIONS] require [...optionalList] ' +
+                        '    ' + '%cUsage: ' + exec + ' file.js [OPTIONS] require [...optionalList]' +
                         '\n\n' +
+                        '    ' + '%c'         + '\n' +
                         '    ' + '%cOPTIONS:' + '\n' +
                         '    ' + '%c-f, --flags    %cFLAG Description' + '\n' +
                         '    ' + '%c--help, -h     %cPrint this help' + '\n'
@@ -230,6 +233,7 @@ describe('./lib/command/command', () => {
                     expect(styles).to.be.deep.equal([
                         'color:green', // description
                         '', // usage
+                        '', // start options
                         'color:yellow', // options title
                         'color:green', '', // f flag
                         'color:green', '', // help flag

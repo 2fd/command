@@ -1,4 +1,6 @@
 import {expect} from 'chai';
+import {consume} from './utils';
+import {ArgvInput} from '../../../lib/command/io/input';
 import {Param, NoParams, IgnoreParams} from '../../../lib/command/params';
 
 describe('./lib/command/param', () => {
@@ -8,89 +10,135 @@ describe('./lib/command/param', () => {
         it('accept require value', () => {
 
             let requireValue = new Param('val');
-            let requireMultipleValue = new Param('val1 val2');
-            let expectValue1 = 'expect-value1';
-            let expectValue2 = 'expect-value2';
+            let unexpectInput1 = new ArgvInput([]);
+            let expectInput1 = new ArgvInput(['expect-value1']);
 
-            expect(() => requireValue.get()).to.throw(Error);
+            expect(() => consume(requireValue, unexpectInput1))
+                .to.throw(Error, 'Param val is required');
 
-            requireValue.push(expectValue1);
-            expect(requireValue.get()).to.be.deep.equal({
-                val: expectValue1
+            expect(consume(requireValue, expectInput1)).to.be.deep.equal({
+                argv: [],
+                exec: [],
+                flags: {},
+                params: {
+                    val: 'expect-value1'
+                },
             });
 
-            requireMultipleValue.push(expectValue1);
-            expect(() => requireMultipleValue.get()).to.throw(Error);
 
-            requireMultipleValue.push(expectValue2);
-            expect(requireMultipleValue.get()).to.be.deep.equal({
-                val1: expectValue1,
-                val2: expectValue2
+            let requireMultipleValue = new Param('val1 val2');
+            let unexpectEmptyInput = new ArgvInput([]);
+            let unexpectInput2 = new ArgvInput(['expect-value1']);
+            let expectInput2 = new ArgvInput(['expect-value1', 'expect-value2']);
+
+            expect(() => consume(requireMultipleValue, unexpectEmptyInput))
+                .to.throw(Error, 'Param val1 is required');
+
+            expect(() => consume(requireMultipleValue, unexpectInput2))
+                .to.throw(Error, 'Param val2 is required');
+
+            expect(consume(requireMultipleValue, expectInput2)).to.be.deep.equal({
+                argv: [],
+                exec: [],
+                flags: {},
+                params: {
+                    val1: 'expect-value1',
+                    val2: 'expect-value2',
+                },
             });
 
         });
 
         it('accept optional value', () => {
 
-            let optionalParamEmpty = new Param('[optionalValue]');
-            let optionalParamComplete = new Param('[optionalValue]');
-            let expectValue = 'expect-value';
+            let optionalParam = new Param('[optionalValue]');
+            let emptyParamInput = new ArgvInput([]);
+            let singleParamInput = new ArgvInput(['paramA']);
+            let multipleParamInput = new ArgvInput(['param1', 'param2', 'param3']);
 
-            optionalParamComplete.push(expectValue);
-
-            expect(optionalParamEmpty.get()).to.be.deep.equal({
-                optionalValue: ''
+            expect(consume(optionalParam, emptyParamInput)).to.be.deep.equal({
+                argv: [],
+                exec: [],
+                flags: {},
+                params: {},
             });
 
-            expect(optionalParamComplete.get()).to.be.deep.equal({
-                optionalValue: expectValue
+            expect(consume(optionalParam, singleParamInput)).to.be.deep.equal({
+                argv: [],
+                exec: [],
+                flags: {},
+                params: {
+                    optionalValue: 'paramA'
+                },
             });
+
+
+            expect(() => consume(optionalParam, multipleParamInput))
+                .to.throw(Error, 'Unexpected param: param2');
         });
 
-        it('accep list value', () => {
+        it('accep list of 1 or more values', () => {
 
             let requireList = new Param('...list');
-            let optionalList = new Param('[...list]');
+            let emptyParamInput = new ArgvInput([]);
+            let singleParamInput = new ArgvInput(['paramA']);
+            let multipleParamInput = new ArgvInput(['param1', 'param2', 'param3']);
 
-            let expectValue1 = 'expect-value1';
+            expect(() => consume(requireList, emptyParamInput))
+                .to.throw(Error, 'Param list is required');
 
-            expect(() => requireList.get()).to.throw(Error);
-            expect(optionalList.get()).to.be.deep.equal({
-                list: []
+            expect(consume(requireList, singleParamInput)).to.be.deep.equal({
+                argv: [],
+                exec: [],
+                flags: {},
+                params: {
+                    list: ['paramA']
+                },
             });
 
-            requireList.push(expectValue1);
-            optionalList.push(expectValue1);
-            expect(requireList.get()).to.be.deep.equal({
-                list: [expectValue1]
-            });
-            expect(optionalList.get()).to.be.deep.equal({
-                list: [expectValue1]
-            });
 
-            requireList.push(expectValue1);
-            optionalList.push(expectValue1);
-            expect(requireList.get()).to.be.deep.equal({
-                list: [expectValue1, expectValue1]
-            });
-            expect(optionalList.get()).to.be.deep.equal({
-                list: [expectValue1, expectValue1]
+            expect(consume(requireList, multipleParamInput)).to.be.deep.equal({
+                argv: [],
+                exec: [],
+                flags: {},
+                params: {
+                    list: ['param1', 'param2', 'param3']
+                },
             });
         });
 
-        it('accept strict mode', () => {
+        it('accep list of 0 or more values', () => {
 
-            let emptyParam = new Param('', true);
-            let singleParam = new Param('param', true);
+            let requireList = new Param('[...list]');
+            let emptyParamInput = new ArgvInput([]);
+            let singleParamInput = new ArgvInput(['paramA']);
+            let multipleParamInput = new ArgvInput(['param1', 'param2', 'param3']);
 
-            let paramA = 'ParamA';
-            let paramB = 'ParamB';
-            let paramC = 'ParamC';
+            expect(consume(requireList, emptyParamInput)).to.be.deep.equal({
+                argv: [],
+                exec: [],
+                flags: {},
+                params: {},
+            });
 
-            expect(() => emptyParam.push(paramA)).to.throw(Error);
+            expect(consume(requireList, singleParamInput)).to.be.deep.equal({
+                argv: [],
+                exec: [],
+                flags: {},
+                params: {
+                    list: ['paramA']
+                },
+            });
 
-            singleParam.push(paramB);
-            expect(() => singleParam.push(paramC)).to.throw(Error);
+
+            expect(consume(requireList, multipleParamInput)).to.be.deep.equal({
+                argv: [],
+                exec: [],
+                flags: {},
+                params: {
+                    list: ['param1', 'param2', 'param3']
+                },
+            });
         });
     });
 
@@ -99,8 +147,8 @@ describe('./lib/command/param', () => {
         it('throw error if push any param', () => {
 
             let noParams = new NoParams();
-            let paramA = 'ParamA';
-            expect(() => noParams.push(paramA)).to.throw(Error);
+            let input = new ArgvInput(['param1'])
+            expect(() => consume(noParams, input)).to.throw(Error, 'Unexpected param: param1');
 
         });
     });
@@ -110,16 +158,14 @@ describe('./lib/command/param', () => {
         it('ignore any param', () => {
 
             let ignoreParams = new IgnoreParams();
-            let paramA = 'ParamA';
-            let paramB = 'ParamB';
-            let paramC = 'ParamC';
+            let input = new ArgvInput(['param1', 'param2', 'param3']);
 
-            ignoreParams.push(paramA);
-            ignoreParams.push(paramB);
-            ignoreParams.push(paramC);
-
-            expect(ignoreParams.get()).to.be.deep.equal({});
-
+            expect(consume(ignoreParams, input)).to.be.deep.equal({
+                argv: [],
+                exec: [],
+                flags: {},
+                params: {},
+            });
         });
     });
 });

@@ -1,8 +1,6 @@
 import {
     CommandInterface,
-    CommnadList,
     CommandType,
-    CommandTypeList,
     InputInterface,
     OutputInterface,
     QuickCommandType,
@@ -15,37 +13,64 @@ import {
     StringCommandProxy
 } from './proxy';
 
+import {Param} from './params';
+import {SoftCommand} from './command';
 import {toString, repeat, TAB_SIZE} from './helper';
 
-export class ExecutorCommand implements CommandInterface {
+type ExecutorParams = {
+    COMMAND?: string;
+}
 
-    _commands: CommnadList = {};
+type ExecutorFlags = {
+    help?: boolean;
+}
 
-    description: string = '';
+type CommandListIndex = {
+    [command: string]: CommandInterface<any, any>;
+}
+
+type CommandTypeListIndex = {
+    [command: string]: CommandType;
+}
+
+export class ExecutorCommand extends SoftCommand<ExecutorParams, ExecutorFlags> {
+
+    _commands: CommandListIndex = {};
+
+    _hasToConsume: boolean = true;
 
     version: string = '0.0.0';
 
+    description: string = '';
+
+    flags = [];
+
+    params = new Param('[COMMAND]');
+
     addCommand(name: string, exec: CommandType): this {
 
-        switch (typeof exec) {
-            case 'string':
-                this._commands[name] = new StringCommandProxy(<string>exec);
-                break;
-            case 'function':
-                this._commands[name] = new QuickCommandProxy(<QuickCommandType>exec);
-                break;
-            default:
-                if (Object(exec) === exec) {
-                    this._commands[name] = <CommandInterface>exec;
-                } else {
-                    throw new TypeError(`Unexpected type ${toString(exec)} in command ${name}`);
-                }
-        };
+        let command: CommandInterface<any, any>;
+        let typeOf = typeof exec;
+
+        if (typeOf === 'string') {
+            command = new StringCommandProxy(exec as string);
+
+        } else if (typeOf === 'function') {
+            command = new QuickCommandProxy(exec as QuickCommandType);
+
+        } else if (typeOf === 'object' && exec !== null && !Array.isArray(exec)) {
+            command = exec as CommandInterface<any, any>;
+
+        } else {
+            throw new TypeError(`Unexpected type ${toString(exec)} in command ${name}`);
+        }
+
+        this._commands[name] = command;
 
         return this;
     }
 
-    addCommands(commandList: CommandTypeList): this {
+    addCommands(commandList: CommandTypeListIndex): this {
 
         Object
             .keys(commandList)
@@ -54,7 +79,7 @@ export class ExecutorCommand implements CommandInterface {
         return this;
     }
 
-    addCommadsNS(ns: string, commandList: CommandTypeList): this {
+    addCommadsNS(ns: string, commandList: CommandTypeListIndex): this {
 
         Object
             .keys(commandList)
@@ -63,69 +88,22 @@ export class ExecutorCommand implements CommandInterface {
         return this;
     }
 
-    handle(input: InputInterface, output: OutputInterface): void {
+    action(input: InputInterface<ExecutorFlags, ExecutorParams>, output): void {
 
-        let command = input.argv.shift();
+        let params = input.params;
 
-        if (
-            typeof command === 'undefined' ||
-            !this._commands[command]
-        ) {
-            this.help(input, output);
+        if (this._commands[params.COMMAND]) {
+            let Input: any = input.constructor;
+            let subInput: InputInterface<any, any> = new Input(input.argv, input.exec);
+            this._commands[params.COMMAND].handle(subInput, output);
 
         } else {
-            
-            try {
-                this._commands[command].handle(input, output);
-            } catch (e) {
-                let err: Error = <Error>e;
-                output.error('%c' + err.message, 'background:red;color:white');
-                output.error(err.stack);
-            }
+            this.help(input, output);
         }
     }
 
-    /**
-     * Print help info from command
-     */
-    help(input: InputInterface, output: OutputInterface): void {
-
-        let ident = repeat(' ', TAB_SIZE);
-        let join = '\n' + ident;
-        let executable = input.exec.join(' ');
-        let helps: Array<string> = [];
-        let styles: Array<string> = [];
-
-        helps.push('');
-        helps.push('%c' + this.helpDescription());
-        styles.push('color:green');
-        
-        helps.push('%c' + this.helpUsage(executable));
-        styles.push(''); // reset styles
-        
-        this.helpOptions()
-            .forEach((definition) => {
-                let [option, description] = definition;
-                let hasOption = !!option;
-                let hasDescription = !!description;
-                
-                if(!hasOption) {
-                    helps.push('%c');
-                    styles.push(''); // reset styles
-                
-                } else if (!hasDescription) {
-                    helps.push('%c' + option);
-                    styles.push('color:yellow');
-                
-                } else {
-                    helps.push('%c' + option + '%c' + description);
-                    styles.push('color:green');
-                    styles.push(''); // reset styles
-                    
-                }
-            });
-        
-        output.log(helps.join(join) + '\n', ...styles);
+    hasToConsume(input: InputInterface<ExecutorFlags, ExecutorParams>, output: OutputInterface): boolean {
+        return input.argv.length > 0 && !input.params.COMMAND;
     }
 
     /**
@@ -136,30 +114,28 @@ export class ExecutorCommand implements CommandInterface {
     }
 
     /**
-     * Return usage description
+     * 
      */
-    helpUsage(executable: string): string {
-        return 'Usage: ' + executable + ' [COMMAND]\n';
-    }
-
     helpOptions(): Array<string[]> {
 
         let commands = Object.keys(this._commands);
         let max = Math.max(
             ...commands.map(command => command.length)
         );
-        
-        let helpTitle = [
-            ['COMMAND:']
+
+        let helpCommands = commands
+            .sort()
+            .map(command => {
+
+                let space = repeat(' ', max - command.length + TAB_SIZE);
+
+                return [command + space, this._commands[command].description];
+            });
+
+        return [
+            [this.params.definition + ':'],
+            ...helpCommands,
+            ...super.helpOptions(),
         ];
-        
-        let helpCommands = commands.sort().map(command => {
-            
-            let space = repeat(' ', max - command.length + TAB_SIZE);
-            
-            return [command + space, this._commands[command].description];
-        });
-        
-        return helpTitle.concat(helpCommands);
     }
 }

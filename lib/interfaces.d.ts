@@ -1,32 +1,11 @@
+/**
+ * OutputInterface
+ */
 export interface OutputInterface {
+    
     log(msj: string, ...obj: Array<any>): void;
+    
     error(msj: string, ...obj: Array<any>): void;
-}
-
-export interface InputInterface {
-
-    argv: Array<string>;
-
-    exec: Array<string>;
-
-    flags: InputValueList;
-
-    params: InputValueList;
-}
-
-export interface FlagInterface {
-
-    name: string;
-
-    description: string;
-
-    list: Array<string>;
-
-    after(input: InputInterface, output: OutputInterface): void;
-
-    before(input: InputInterface, output: OutputInterface): void;
-
-    parse(input: InputInterface, output: OutputInterface): void;
 }
 
 export interface FormatterInterface {
@@ -34,39 +13,68 @@ export interface FormatterInterface {
     format(str: string, ...replacements: Array<any>): string;
 }
 
-export interface CommandInterface {
+/**
+ * InputInterface
+ */
+export interface InputInterface<F, P>{
+
+    argv: Array<string>;
+
+    exec: Array<string>;
+
+    flags: F;
+
+    params: P;
+}
+
+/**
+ * FlagInterface
+ */
+export interface FlagInterface<F> {
+
+    name: string;
 
     description: string;
 
-    handle(input: InputInterface, output: OutputInterface): void;
-}
+    list: Array<string>;
 
-export type QuickCommandType =
-    ((input: InputInterface, output: OutputInterface) => void) &
-    { description?: string };
+    after(input: InputInterface<F , any>, output: OutputInterface): void;
 
-export type CommandType = string | QuickCommandType | CommandInterface;
+    before(input: InputInterface<F, any>, output: OutputInterface): void;
 
-export type CommandTypeList = {
-    [command: string]: CommandType;
-}
-
-export type CommnadList = {
-    [coommand: string]: CommandInterface;
-}
-
-export type InputValueList = {
-    [param: string]: any | Array<any>
+    parse(flag: string, input: InputInterface<F, any>, output: OutputInterface): void;
 }
 
 /**
  * ParamInterface
  */
-export interface ParamInterface<R> {
+export interface ParamInterface<P> {
 
     definition: string;
 
-    push(param: string): void;
+    after(input: InputInterface<any , P>, output: OutputInterface): void;
 
-    get(): R;
+    before(input: InputInterface<any, P>, output: OutputInterface): void;
+
+    parse(param: string, input:InputInterface<any, P>, output:OutputInterface): void;
 }
+
+/**
+ * CommandInterface
+ */
+export interface CommandInterface<F, P> {
+
+    description: string;
+
+    handle(input: InputInterface<F, P>, output: OutputInterface): void;
+}
+
+/**
+ * QuickCommandType
+ */
+export type QuickCommandType = (input: InputInterface<any, any>, output: OutputInterface) => void;
+
+/**
+ * CommandType
+ */
+export type CommandType = string | QuickCommandType | CommandInterface<any, any>;

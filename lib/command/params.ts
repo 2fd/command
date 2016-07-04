@@ -1,138 +1,155 @@
-import {
-    ParamInterface,
-    InputValueList
-} from '../interfaces';
+import {format} from 'util';
+import {ParamInterface, InputInterface, OutputInterface} from '../interfaces';
 
-export interface ParamValue {
-
-    require: boolean;
-
+class ParamValue {
     name: string;
+    isRequired: boolean;
+    isList: boolean;
 
-    value: string | Array<string>;
+    constructor(definition: string){
+
+        // is require?
+        if (definition[0] === '[' && definition.slice(-1) === ']') {
+            definition = definition.slice(1, -1);
+            this.isRequired = false;
+        } else {
+            this.isRequired = true;
+        }
+
+        // is list?
+        if (
+            definition[0] === '.' &&
+            definition[1] === '.' &&
+            definition[2] === '.'
+        ) {
+            definition = definition.slice(3);
+            this.isList = true;
+        } else {
+            this.isList = false;
+
+        }
+
+        this.name = definition;
+    }
+
+    parse(param: string, input: InputInterface<any, any>, output: OutputInterface): boolean {
+
+        if(this.isList) {
+            let list = input.params[this.name] || [];
+            list.push(param);
+            input.params[this.name] = list;
+            return true;
+
+        } else if(!(this.name in input.params)) {
+            input.params[this.name] = param;
+            return true;
+        }
+
+        return false;
+    }
+
+    validate(input: InputInterface<any, any>, output: OutputInterface){
+
+        if(!this.isRequired) {
+            return true;
+
+        } else if (
+            this.isList &&
+            Array.isArray(input.params[this.name]) &&
+            input.params[this.name].length > 0
+        ) {
+            return true;
+
+        } else if(
+            this.name in input.params &&
+            input.params !== ''
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+    
 }
 
 /**
  * Usage:
  *  new Param('')
+ *  new Param('requireValue')
+ *  new Param('...requireListValue')
+ *  new Param('[optionalValue]')
+ *  new Param('[...optionalListValue]')
+ *  new Param('requireValue1 requireValue2 [optionalValue] [...optionalListValue]')
  */
-export class Param implements ParamInterface<InputValueList> {
+export class Param<P> implements ParamInterface<P> {
 
     definition: string;
 
-    strict: boolean;
+    values: ParamValue[] = [];
 
-    index = 0;
+    constructor(definition: string) {
 
-    paramValue: Array<ParamValue> = [];
-
-    constructor(definition: string, strict = false) {
+        if(typeof definition !== 'string' || definition === '')
+            throw new Error(
+                format('Invalid Param definition: %j', definition)
+            );
 
         this.definition = definition;
-        this.strict = strict;
-
-        if (definition.length)
-            definition
-                .split(/\s+/i)
-                .forEach(def => this.setDefinitionValue(def));
+        
+        this.values = definition
+            .split(/\s+/i)
+            .map(def => new ParamValue(def));
     }
 
-    setDefinitionValue(def: string) {
+    after(input, output){
+        
+        this
+            .values
+            .forEach(value => {
 
-        let require = true;
-        let list = false;
-
-        // is require?
-        if (
-            def[0] === '[' &&
-            def.slice(-1) === ']'
-        ) {
-            require = false;
-            def = def.slice(1, -1);
-        }
-
-        // is list?
-        if (
-            def[0] === '.' &&
-            def[1] === '.' &&
-            def[2] === '.'
-        ) {
-            list = true;
-            def = def.slice(3);
-        }
-
-        // push param definition
-        this.paramValue.push({
-            name: def,
-            require: require,
-            value: list ? [] : ''
-        });
+                if(!value.validate(input, output))
+                    throw new Error(
+                        format('Param %s is required', value.name)
+                    );
+            })
     }
 
-    push(param: string): void {
+    before(input, output){}
 
-        let paramValue = this.paramValue[this.index];
+    parse(param: string, input: InputInterface<any, any>, output: OutputInterface): void {
 
-        if (typeof paramValue === 'undefined') {
-            if (this.strict)
-                throw new Error('Unexpected param: ' + param);
+        let parsed = this
+            .values
+            .some((value: ParamValue) => value.parse(param, input, output));
 
-            // ignore
-
-        } else if (Array.isArray(paramValue.value)) {
-            let value = <Array<string>>paramValue.value;
-            value.push(param);
-
-        } else {
-            paramValue.value = param;
-            this.index++;
-        }
-    }
-
-    get(): InputValueList {
-
-        let paramResult: InputValueList = {};
-
-        this.paramValue.forEach(paramValue => {
-
-            if (
-                paramValue.require &&
-                paramValue.value.length === 0
-            )
-                throw new Error(`Param ${paramValue.name} is require`);
-
-            paramResult[paramValue.name] = paramValue.value;
-        });
-
-        return paramResult;
+        if(!parsed)
+            throw new Error('Unexpected param: ' + param);
     }
 }
 
 /**
  * 
  */
-export class NoParams implements ParamInterface<InputValueList> {
+export class NoParams implements ParamInterface<{}> {
 
     definition = '';
 
-    /** Throw an error if any param is pushed */
-    push(param: string): void {
-        throw new Error('Unexpected param: ' + param);
-    }
+    after(input, output){}
 
-    get(): InputValueList {
-        return {};
+    before(input, output){}
+
+    parse(param: string, input: InputInterface<any, any>, output): void {
+        throw new Error('Unexpected param: ' + param);
     }
 }
 
-export class IgnoreParams implements ParamInterface<InputValueList> {
+export class IgnoreParams implements ParamInterface<{}> {
 
     definition = '';
 
-    /** Ignore any param pushed */
-    push(param: string): void { }
+    after(input, output){}
 
-    get(): InputValueList {
-        return {};
-    }
+    before(input, output){}
+
+    parse(param: string, input: InputInterface<any, any>, output): void { }
 }

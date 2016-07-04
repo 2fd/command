@@ -10,24 +10,24 @@ export type logger = (msj: string, ...replacements: Array<any>) => void;
 export class OuputExpected implements OutputInterface {
 
     count = 0;
-    
+
     expectations: Array<logger>;
 
-    constructor(expectations: Array<logger>){
+    constructor(expectations: Array<logger>) {
         this.expectations = expectations;
     }
 
     log(msj: string, ...replacements: Array<any>) {
-        
+
         let expect = this.expectations[this.count];
-        
-        if(typeof expect !== 'function')
+
+        if (typeof expect !== 'function')
             throw new Error('Unexpected output');
-        
+
         expect(msj, ...replacements);
         this.count++;
     }
-    
+
     error(msj: string, ...replacements: Array<any>) {
         this.log(msj, ...replacements);
     }
@@ -42,7 +42,7 @@ export class DummyOutput implements OutputInterface {
 }
 
 export class ConsoleOutput implements OutputInterface {
-    
+
     formatter: FormatterInterface = new Formatter;
 
     log(msj: string, ...obj: Array<any>): void {
@@ -50,7 +50,7 @@ export class ConsoleOutput implements OutputInterface {
             this.formatter.format(msj, ...obj)
         );
     }
-    
+
     error(msj: string, ...obj: Array<any>): void {
         console.error(
             this.formatter.format(msj, ...obj)
@@ -70,7 +70,7 @@ export class ColorConsoleOutput implements OutputInterface {
             this.formatters.log.format(msj, ...obj)
         );
     }
-    
+
     error(msj: string, ...obj: Array<any>): void {
         console.error(
             this.formatters.error.format(msj, ...obj)

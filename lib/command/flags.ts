@@ -4,7 +4,7 @@ import {
     FlagInterface
 } from '../interfaces';
 
-export class NullFlag implements FlagInterface {
+export class NullFlag implements FlagInterface<void> {
 
     name = 'NullOption';
 
@@ -65,39 +65,36 @@ export class FlagConstructor {
     }
 }
 
-export class BooleanFlag extends FlagConstructor implements FlagInterface {
+export class BooleanFlag<F> extends FlagConstructor implements FlagInterface<F> {
 
-    after(input: InputInterface): void { }
+    after(input: InputInterface<F, any>, output: OutputInterface): void { }
 
-    before(input: InputInterface): void {
+    before(input: InputInterface<F, any>, output: OutputInterface): void {
         input.flags[this.name] = false;
     }
 
-    parse(input: InputInterface): void {
+    parse(flag: string, input: InputInterface<F, any>, output: OutputInterface): void {
         input.flags[this.name] = true;
     }
 }
 
-export class HelpFlag extends BooleanFlag implements FlagInterface {
+type HelpFlagInput = {
+    help?: boolean;
+}
 
-    constructor(
-        name = 'help',
-        list = ['--help', '-h'],
-        description = 'Print this help'
-    ) {
-        super(name, list, description);
+export class HelpFlag extends BooleanFlag<HelpFlagInput> implements FlagInterface<HelpFlagInput> {
+
+    constructor() {
+        super('help', ['--help', '-h'], 'Print this help');
     }
 }
 
-export class RequireFlag implements FlagInterface {
+export class RequireFlag<F> implements FlagInterface<F> {
 
-    parsed: boolean;
+    flag: FlagInterface<F>;
 
-    flag: FlagInterface;
-
-    constructor(flag: FlagInterface) {
+    constructor(flag: FlagInterface<F>) {
         this.flag = flag;
-        this.parsed = false;
     }
 
     get name() {
@@ -112,23 +109,28 @@ export class RequireFlag implements FlagInterface {
         return this.flag.list;
     }
 
-    after(input: InputInterface, output: OutputInterface): void {
+    after(input: InputInterface<any, any>, output: OutputInterface): void {
         this.flag.after(input, output);
 
-        if (!this.parsed)
+        if (
+            input.flags[this.name] === undefined ||
+            input.flags[this.name] === null ||
+            isNaN(input.flags[this.name]) ||
+            input.flags[this.name].length === 0 
+        )
             throw new Error(`Flag ${this.flag.name} (${this.flag.list.join(', ')}) is required`);
     }
 
-    before(input: InputInterface, output: OutputInterface): void {
+    before(input, output): void {
         this.flag.before(input, output);
     }
 
-    parse(input: InputInterface, output: OutputInterface): void {
-        this.flag.parse(input, output);
+    parse(flag, input, output): void {
+        this.flag.parse(flag, input, output);
     }
 }
 
-export class ValueFlag<T> extends FlagConstructor implements FlagInterface {
+export class ValueFlag<T> extends FlagConstructor implements FlagInterface<any> {
 
     parser: (value: string) => T;
 
@@ -146,15 +148,14 @@ export class ValueFlag<T> extends FlagConstructor implements FlagInterface {
         this.def = def;
     }
 
-    after(input: InputInterface): void { }
+    after(input): void { }
 
-    before(input: InputInterface): void {
-
+    before(input): void {
         if (typeof this.def !== 'undefined')
             input.flags[this.name] = this.def;
     }
 
-    parse(input: InputInterface): void {
+    parse(falg: string, input: InputInterface<any, any>): void {
 
         if (input.argv.length === 0 || input.argv[0][0] === '-')
             throw new Error(
@@ -171,7 +172,7 @@ export class ValueFlag<T> extends FlagConstructor implements FlagInterface {
     }
 }
 
-export class ListValueFlag<T> extends FlagConstructor implements FlagInterface {
+export class ListValueFlag<T> extends FlagConstructor implements FlagInterface<any> {
 
     parser: (value: string) => T;
 
@@ -197,24 +198,24 @@ export class ListValueFlag<T> extends FlagConstructor implements FlagInterface {
             throw new Error(`Flag ${this.name} (${this.list.join(', ')}) default value must be an Array`);
     }
 
-    after(input: InputInterface): void { }
-
-    before(input: InputInterface): void {
-        input.flags[this.name] = this.def;
+    after(input): void {
+        if (input.flags[this.name].length === 0)
+            input.flags[this.name] = this.def;
     }
 
-    parse(input: InputInterface): void {
+    before(input): void {
+        input.flags[this.name] = [];
+    }
+
+    parse(flag: string, input): void {
 
         if (input.argv.length === 0 || input.argv[0][0] === '-')
             throw new Error(
                 `Flag ${this.name} (${this.list.join(', ')}) expect a value`
             );
-            
-        if(input.flags[this.name] === this.def)
-            input.flags[this.name] = [];
 
         let val = input.argv.shift();
-        
+
         input.flags[this.name].push(
             typeof this.parser === 'function' ? this.parser(val) : val
         );

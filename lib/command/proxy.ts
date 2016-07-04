@@ -1,7 +1,6 @@
 import {
     QuickCommandType,
     CommandType,
-    CommandTypeList,
     InputInterface,
     OutputInterface,
     CommandInterface
@@ -10,22 +9,22 @@ import {
 import {resolve} from 'path';
 import {toString} from './helper';
 
-function requireCommand(path: string): CommandInterface {
+function requireCommand(path: string): CommandInterface<any, any> {
 
     let [file, name] = path.split('#');
     let filepath = file[0] === '.' ?
         resolve(file) :
         require.resolve(file);
 
-    let command: CommandInterface | QuickCommandType = name ?
+    let command: CommandInterface<any, any> | QuickCommandType = name ?
         require(filepath)[name] :
         require(filepath);
 
     if (typeof command === 'function') {
-        return new QuickCommandProxy(<QuickCommandType>command);
+        return new QuickCommandProxy(command as QuickCommandType);
 
     } else if (Object(command) === command) {
-        return <CommandInterface>command;
+        return command as CommandInterface<any, any>;
 
     } else if (name && command === undefined) {
         throw new Error(name + ' not found in ' + path);
@@ -41,11 +40,11 @@ function requireCommand(path: string): CommandInterface {
 /**
  * StringCommandProxy
  */
-export class StringCommandProxy implements CommandInterface {
+export class StringCommandProxy implements CommandInterface<any, any> {
 
     _path: string;
 
-    _command: CommandInterface;
+    _command:  CommandInterface<any, any>;
 
     constructor(path: string) {
         this._path = path;
@@ -62,7 +61,7 @@ export class StringCommandProxy implements CommandInterface {
         return this.command().description;
     }
 
-    handle(input: InputInterface, output: OutputInterface): void {
+    handle(input, output): void {
         this.command().handle(input, output);
     }
 }
@@ -72,7 +71,7 @@ export class StringCommandProxy implements CommandInterface {
  *
  *
  */
-export class QuickCommandProxy implements CommandInterface {
+export class QuickCommandProxy implements CommandInterface<any, any> {
 
     _quick: QuickCommandType & { description?: string };
 
@@ -81,10 +80,10 @@ export class QuickCommandProxy implements CommandInterface {
     }
 
     get description(): string {
-        return this._quick.description || 'quick command';
+        return this._quick.description || '-';
     }
 
-    handle(input: InputInterface, output: OutputInterface): void {
+    handle(input, output): void {
         this._quick(input, output);
     }
 }

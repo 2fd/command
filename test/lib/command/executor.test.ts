@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 import {basename} from 'path';
-import {remoteCommand, quickCommand} from './mocks';
+import {remoteCommand, quickCommand} from './utils';
 import {InputInterface, OutputInterface} from '../../../lib/interfaces';
 import {ExecutorCommand} from '../../../lib/command/executor';
 import {ArgvInput} from '../../../lib/command/io';
@@ -41,8 +41,8 @@ describe('./lib/command/executor', () => {
 
             exec.addCommand('instance', remoteCommand);
             exec.addCommand('quick', quickCommand);
-            exec.addCommand('toInstace', './test/lib/command/mocks#remoteCommand');
-            exec.addCommand('toQuick', './test/lib/command/mocks#quickCommand');
+            exec.addCommand('toInstace', './test/lib/command/utils#remoteCommand');
+            exec.addCommand('toQuick', './test/lib/command/utils#quickCommand');
 
             it('add Command Instace', () => {
                 exec.handle(
@@ -78,8 +78,8 @@ describe('./lib/command/executor', () => {
             exec.addCommands({
                 'list:instace': remoteCommand,
                 'list:quick': quickCommand,
-                'list:toInstace': './test/lib/command/mocks#remoteCommand',
-                'list:toQuick': './test/lib/command/mocks#quickCommand',
+                'list:toInstace': './test/lib/command/utils#remoteCommand',
+                'list:toQuick': './test/lib/command/utils#quickCommand',
             });
 
             it('add Command Instace', () => {
@@ -116,8 +116,8 @@ describe('./lib/command/executor', () => {
             exec.addCommadsNS('ns', {
                 'instace': remoteCommand,
                 'quick': quickCommand,
-                'toInstace': './test/lib/command/mocks#remoteCommand',
-                'toQuick': './test/lib/command/mocks#quickCommand',
+                'toInstace': './test/lib/command/utils#remoteCommand',
+                'toQuick': './test/lib/command/utils#quickCommand',
             });
 
             it('add Command Instace', () => {
@@ -159,26 +159,31 @@ describe('./lib/command/executor', () => {
                         '\n' +
                         '    ' + '%cExecutorCommand Test [v0.1.0]' +
                         '\n\n' +
-                        '    ' + '%cUsage: ' + node + ' file.js [COMMAND]' +
+                        '    ' + '%cUsage: ' + node + ' file.js [OPTIONS] [COMMAND]' +
                         '\n\n' +
-                        '    ' + '%cCOMMAND:' + '\n' +
+                        '    ' + '%c'         + '\n' +
+                        '    ' + '%c[COMMAND]:' + '\n' +
                         '    ' + '%cinstance          %cCommand: RemoteCommand' + '\n' +
                         '    ' + '%clist:instace      %cCommand: RemoteCommand' + '\n' +
-                        '    ' + '%clist:quick        %cCommand: quickCommand' + '\n' +
+                        '    ' + '%clist:quick        %c-'                      + '\n' +
                         '    ' + '%clist:toInstace    %cCommand: RemoteCommand' + '\n' +
-                        '    ' + '%clist:toQuick      %cCommand: quickCommand' + '\n' +
+                        '    ' + '%clist:toQuick      %c-'                      + '\n' +
                         '    ' + '%cns:instace        %cCommand: RemoteCommand' + '\n' +
-                        '    ' + '%cns:quick          %cCommand: quickCommand' + '\n' +
+                        '    ' + '%cns:quick          %c-'                      + '\n' +
                         '    ' + '%cns:toInstace      %cCommand: RemoteCommand' + '\n' +
-                        '    ' + '%cns:toQuick        %cCommand: quickCommand' + '\n' +
-                        '    ' + '%cquick             %cCommand: quickCommand' + '\n' +
+                        '    ' + '%cns:toQuick        %c-'                      + '\n' +
+                        '    ' + '%cquick             %c-'                      + '\n' +
                         '    ' + '%ctoInstace         %cCommand: RemoteCommand' + '\n' +
-                        '    ' + '%ctoQuick           %cCommand: quickCommand' + '\n'
+                        '    ' + '%ctoQuick           %c-'                      + '\n' +
+                        '    ' + '%c'         + '\n' +
+                        '    ' + '%cOPTIONS:' + '\n' +
+                        '    ' + '%c--help, -h    %cPrint this help' + '\n'
                     );
                     
                     expect(styles).to.be.deep.equal([
                         'color:green', // description
                         '', // usage
+                        '', // start options
                         'color:yellow', // options title
                         'color:green', '', // instace
                         'color:green', '', // list:instace
@@ -192,6 +197,9 @@ describe('./lib/command/executor', () => {
                         'color:green', '', // quick
                         'color:green', '', // toInstace
                         'color:green', '', // toQuick
+                        '', // start options
+                        'color:yellow', // options title
+                        'color:green', '', // instace
                     ]);
                     
                 }

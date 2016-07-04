@@ -1,27 +1,8 @@
 import {expect} from 'chai';
+import {consume} from './utils';
 import {InputInterface, FlagInterface} from '../../../lib/interfaces';
 import {ArgvInput, DummyOutput} from '../../../lib/command/io';
 import {NullFlag, BooleanFlag, RequireFlag, ValueFlag, ListValueFlag} from '../../../lib/command/flags';
-
-function consume(flag: FlagInterface, input: InputInterface): InputInterface {
-
-    let output = new DummyOutput;
-
-    flag.before(input, output);
-
-    while (input.argv.length > 0) {
-        let f = input.argv.shift();
-
-        if (flag.list.indexOf(f) === -1)
-            throw Error(f + 'not definet in input');
-
-        flag.parse(input, output);
-    }
-
-    flag.after(input, output);
-
-    return input;
-}
 
 describe('./lib/command/flags', () => {
 
@@ -146,7 +127,7 @@ describe('./lib/command/flags', () => {
 
     describe('ListValueFlag', () => {
 
-        let stringValueFlag = new ListValueFlag<string>(
+        let stringValueFlag = new ListValueFlag<{}>(
             'string-list-flag', ['--string', '-s'], 'string flag'
         );
 
