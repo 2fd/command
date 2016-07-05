@@ -78,7 +78,7 @@ export class BooleanFlag<F> extends FlagConstructor implements FlagInterface<F> 
     }
 }
 
-type HelpFlagInput = {
+export type HelpFlagInput = {
     help?: boolean;
 }
 
@@ -121,11 +121,11 @@ export class RequireFlag<F> implements FlagInterface<F> {
             throw new Error(`Flag ${this.flag.name} (${this.flag.list.join(', ')}) is required`);
     }
 
-    before(input, output): void {
+    before(input: InputInterface<any, any>, output: OutputInterface): void {
         this.flag.before(input, output);
     }
 
-    parse(flag, input, output): void {
+    parse(flag: string, input: InputInterface<any, any>, output: OutputInterface): void {
         this.flag.parse(flag, input, output);
     }
 }
@@ -148,14 +148,14 @@ export class ValueFlag<T> extends FlagConstructor implements FlagInterface<any> 
         this.def = def;
     }
 
-    after(input): void { }
+    after(input: InputInterface<any, any>, output: OutputInterface): void { }
 
-    before(input): void {
+    before(input: InputInterface<any, any>, output: OutputInterface): void {
         if (typeof this.def !== 'undefined')
             input.flags[this.name] = this.def;
     }
 
-    parse(falg: string, input: InputInterface<any, any>): void {
+    parse(falg: string, input: InputInterface<any, any>, output: OutputInterface): void {
 
         if (input.argv.length === 0 || input.argv[0][0] === '-')
             throw new Error(
@@ -198,16 +198,16 @@ export class ListValueFlag<T> extends FlagConstructor implements FlagInterface<a
             throw new Error(`Flag ${this.name} (${this.list.join(', ')}) default value must be an Array`);
     }
 
-    after(input): void {
+    after(input: InputInterface<any, any>, output: OutputInterface): void {
         if (input.flags[this.name].length === 0)
             input.flags[this.name] = this.def;
     }
 
-    before(input): void {
+    before(input: InputInterface<any, any>, output: OutputInterface): void {
         input.flags[this.name] = [];
     }
 
-    parse(flag: string, input): void {
+    parse(flag: string, input: InputInterface<any, any>, output: OutputInterface): void {
 
         if (input.argv.length === 0 || input.argv[0][0] === '-')
             throw new Error(

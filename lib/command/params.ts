@@ -1,7 +1,7 @@
 import {format} from 'util';
 import {ParamInterface, InputInterface, OutputInterface} from '../interfaces';
 
-class ParamValue {
+export class ParamValue {
     name: string;
     isRequired: boolean;
     isList: boolean;
@@ -101,7 +101,7 @@ export class Param<P> implements ParamInterface<P> {
             .map(def => new ParamValue(def));
     }
 
-    after(input, output){
+    after(input: InputInterface<any, any>, output: OutputInterface){
         
         this
             .values
@@ -114,7 +114,7 @@ export class Param<P> implements ParamInterface<P> {
             })
     }
 
-    before(input, output){}
+    before(input: InputInterface<any, any>, output: OutputInterface){}
 
     parse(param: string, input: InputInterface<any, any>, output: OutputInterface): void {
 
@@ -134,11 +134,11 @@ export class NoParams implements ParamInterface<{}> {
 
     definition = '';
 
-    after(input, output){}
+    after(input: InputInterface<any, any>, output: OutputInterface){}
 
-    before(input, output){}
+    before(input: InputInterface<any, any>, output: OutputInterface){}
 
-    parse(param: string, input: InputInterface<any, any>, output): void {
+    parse(param: string, input: InputInterface<any, any>, output: OutputInterface): void {
         throw new Error('Unexpected param: ' + param);
     }
 }
@@ -147,9 +147,9 @@ export class IgnoreParams implements ParamInterface<{}> {
 
     definition = '';
 
-    after(input, output){}
+    after(input: InputInterface<any, any>, output: OutputInterface){}
 
-    before(input, output){}
+    before(input: InputInterface<any, any>, output: OutputInterface){}
 
-    parse(param: string, input: InputInterface<any, any>, output): void { }
+    parse(param: string, input: InputInterface<any, any>, output: OutputInterface): void { }
 }

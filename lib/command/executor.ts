@@ -17,19 +17,19 @@ import {Param} from './params';
 import {SoftCommand} from './command';
 import {toString, repeat, TAB_SIZE} from './helper';
 
-type ExecutorParams = {
+export type ExecutorParams = {
     COMMAND?: string;
 }
 
-type ExecutorFlags = {
+export type ExecutorFlags = {
     help?: boolean;
 }
 
-type CommandListIndex = {
+export type CommandListIndex = {
     [command: string]: CommandInterface<any, any>;
 }
 
-type CommandTypeListIndex = {
+export type CommandTypeListIndex = {
     [command: string]: CommandType;
 }
 
@@ -88,7 +88,7 @@ export class ExecutorCommand extends SoftCommand<ExecutorParams, ExecutorFlags> 
         return this;
     }
 
-    action(input: InputInterface<ExecutorFlags, ExecutorParams>, output): void {
+    action(input: InputInterface<ExecutorFlags, ExecutorParams>, output: OutputInterface): void {
 
         let params = input.params;
 
