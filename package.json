@@ -7,7 +7,7 @@
   "scripts": {
     "compile": "tsc -p .",
     "declaration": "tsc -d -p tsconfig.d.json",
-    "preversion": "npm test & npm run declaration & npm run compile",
+    "preversion": "npm test && npm run declaration && npm run compile",
     "test": "./node_modules/.bin/mocha"
   },
   "repository": {
