@@ -152,7 +152,7 @@ describe('./lib/command/executor', () => {
         it('help', () => {
             
             let node = basename(process.execPath);
-            let expectOutput = new OuputExpected([
+            let expectOutput = () => new OuputExpected([
                 (help: string, ...styles:string[]) => {
                     
                     expect(help).to.be.eq(
@@ -210,7 +210,25 @@ describe('./lib/command/executor', () => {
                     process.execPath,
                     'file.js'
                 ]),
-                expectOutput
+                expectOutput()
+            );
+
+            exec.handle(
+                new ArgvInput([
+                    process.execPath,
+                    'file.js',
+                    '--help'
+                ]),
+                expectOutput()
+            );
+
+            exec.handle(
+                new ArgvInput([
+                    process.execPath,
+                    'file.js',
+                    '-h'
+                ]),
+                expectOutput()
             );
         });
 
