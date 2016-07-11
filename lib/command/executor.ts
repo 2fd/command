@@ -15,7 +15,7 @@ import {
 
 import {Param} from './params';
 import {SoftCommand} from './command';
-import {toString, repeat, TAB_SIZE} from './helper';
+import {toString, commandSort, repeat, TAB_SIZE} from './utils';
 
 export type ExecutorParams = {
     COMMAND?: string;
@@ -124,7 +124,7 @@ export class ExecutorCommand extends SoftCommand<ExecutorParams, ExecutorFlags> 
         );
 
         let helpCommands = commands
-            .sort()
+            .sort(commandSort)
             .map(command => {
 
                 let space = repeat(' ', max - command.length + TAB_SIZE);

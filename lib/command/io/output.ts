@@ -1,6 +1,5 @@
 import {InputInterface, OutputInterface, FormatterInterface} from '../../interfaces';
-import {Formatter, ColorFormatter} from './utils';
-
+import {Formatter, ColorFormatter} from '../utils';
 
 /**
  * Output from test

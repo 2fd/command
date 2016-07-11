@@ -7,7 +7,7 @@ import {
 } from '../interfaces';
 
 import {resolve} from 'path';
-import {toString} from './helper';
+import {toString} from './utils';
 
 function requireCommand(path: string): CommandInterface<any, any> {
 

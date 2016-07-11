@@ -13,7 +13,7 @@ describe('./lib/command/executor', () => {
 
     describe('ExecutorCommand', () => {
 
-        let exec = new ExecutorCommand;
+        let executorCommand = new ExecutorCommand;
 
         let exepectInstanceOutput = {
             error() { },
@@ -30,43 +30,43 @@ describe('./lib/command/executor', () => {
         };
 
 
-        exec.version = '0.1.0';
-        exec.description = 'ExecutorCommand Test';
+        executorCommand.version = '0.1.0';
+        executorCommand.description = 'ExecutorCommand Test';
         it('property description', () => {
-            expect(exec.description).to.be.eq('ExecutorCommand Test')
-            expect(exec.helpDescription()).to.be.eq('ExecutorCommand Test [v0.1.0]\n')
+            expect(executorCommand.description).to.be.eq('ExecutorCommand Test')
+            expect(executorCommand.helpDescription()).to.be.eq('ExecutorCommand Test [v0.1.0]\n')
         });
 
         describe('method addCommand', () => {
 
-            exec.addCommand('instance', remoteCommand);
-            exec.addCommand('quick', quickCommand);
-            exec.addCommand('toInstace', './test/lib/command/utils#remoteCommand');
-            exec.addCommand('toQuick', './test/lib/command/utils#quickCommand');
+            executorCommand.addCommand('instance', remoteCommand);
+            executorCommand.addCommand('quick', quickCommand);
+            executorCommand.addCommand('toInstace', './test/lib/command/utils#remoteCommand');
+            executorCommand.addCommand('toQuick', './test/lib/command/utils#quickCommand');
 
             it('add Command Instace', () => {
-                exec.handle(
+                executorCommand.handle(
                     new ArgvInput(['instance']),
                     exepectInstanceOutput
                 );
             });
 
             it('add Quick Command function', () => {
-                exec.handle(
+                executorCommand.handle(
                     new ArgvInput(['quick']),
                     exepectQuickOutput
                 );
             });
 
             it('add path to Command Instace', () => {
-                exec.handle(
+                executorCommand.handle(
                     new ArgvInput(['toInstace']),
                     exepectInstanceOutput
                 );
             });
 
             it('add path to Quick Command function', () => {
-                exec.handle(
+                executorCommand.handle(
                     new ArgvInput(['toQuick']),
                     exepectQuickOutput
                 );
@@ -75,7 +75,7 @@ describe('./lib/command/executor', () => {
 
         describe('method addCommands', () => {
 
-            exec.addCommands({
+            executorCommand.addCommands({
                 'list:instace': remoteCommand,
                 'list:quick': quickCommand,
                 'list:toInstace': './test/lib/command/utils#remoteCommand',
@@ -83,28 +83,28 @@ describe('./lib/command/executor', () => {
             });
 
             it('add Command Instace', () => {
-                exec.handle(
+                executorCommand.handle(
                     new ArgvInput(['list:instace']),
                     exepectInstanceOutput
                 );
             });
 
             it('add Quick Command function', () => {
-                exec.handle(
+                executorCommand.handle(
                     new ArgvInput(['list:quick']),
                     exepectQuickOutput
                 );
             });
 
             it('add path to Command Instace', () => {
-                exec.handle(
+                executorCommand.handle(
                     new ArgvInput(['list:toInstace']),
                     exepectInstanceOutput
                 );
             });
 
             it('add path to Quick Command function', () => {
-                exec.handle(
+                executorCommand.handle(
                     new ArgvInput(['list:toQuick']),
                     exepectQuickOutput
                 );
@@ -113,7 +113,7 @@ describe('./lib/command/executor', () => {
 
         describe('method addCommadsNS', () => {
 
-            exec.addCommadsNS('ns', {
+            executorCommand.addCommadsNS('ns', {
                 'instace': remoteCommand,
                 'quick': quickCommand,
                 'toInstace': './test/lib/command/utils#remoteCommand',
@@ -121,28 +121,28 @@ describe('./lib/command/executor', () => {
             });
 
             it('add Command Instace', () => {
-                exec.handle(
+                executorCommand.handle(
                     new ArgvInput(['ns:instace']),
                     exepectInstanceOutput
                 );
             });
 
             it('add Quick Command function', () => {
-                exec.handle(
+                executorCommand.handle(
                     new ArgvInput(['ns:quick']),
                     exepectQuickOutput
                 );
             });
 
             it('add path to Command Instace', () => {
-                exec.handle(
+                executorCommand.handle(
                     new ArgvInput(['ns:toInstace']),
                     exepectInstanceOutput
                 );
             });
 
             it('add path to Quick Command function', () => {
-                exec.handle(
+                executorCommand.handle(
                     new ArgvInput(['ns:toQuick']),
                     exepectQuickOutput
                 );
@@ -164,6 +164,9 @@ describe('./lib/command/executor', () => {
                         '    ' + '%c'         + '\n' +
                         '    ' + '%c[COMMAND]:' + '\n' +
                         '    ' + '%cinstance          %cCommand: RemoteCommand' + '\n' +
+                        '    ' + '%cquick             %c-'                      + '\n' +
+                        '    ' + '%ctoInstace         %cCommand: RemoteCommand' + '\n' +
+                        '    ' + '%ctoQuick           %c-'                      + '\n' +
                         '    ' + '%clist:instace      %cCommand: RemoteCommand' + '\n' +
                         '    ' + '%clist:quick        %c-'                      + '\n' +
                         '    ' + '%clist:toInstace    %cCommand: RemoteCommand' + '\n' +
@@ -172,11 +175,8 @@ describe('./lib/command/executor', () => {
                         '    ' + '%cns:quick          %c-'                      + '\n' +
                         '    ' + '%cns:toInstace      %cCommand: RemoteCommand' + '\n' +
                         '    ' + '%cns:toQuick        %c-'                      + '\n' +
-                        '    ' + '%cquick             %c-'                      + '\n' +
-                        '    ' + '%ctoInstace         %cCommand: RemoteCommand' + '\n' +
-                        '    ' + '%ctoQuick           %c-'                      + '\n' +
                         '    ' + '%c'         + '\n' +
-                        '    ' + '%cOPTIONS:' + '\n' +
+                        '    ' + '%c[OPTIONS]:' + '\n' +
                         '    ' + '%c--help, -h    %cPrint this help' + '\n'
                     );
                     
@@ -205,7 +205,7 @@ describe('./lib/command/executor', () => {
                 }
             ]);
 
-            exec.handle(
+            executorCommand.handle(
                 new ArgvInput([
                     process.execPath,
                     'file.js'
@@ -213,7 +213,7 @@ describe('./lib/command/executor', () => {
                 expectOutput()
             );
 
-            exec.handle(
+            executorCommand.handle(
                 new ArgvInput([
                     process.execPath,
                     'file.js',
@@ -222,7 +222,7 @@ describe('./lib/command/executor', () => {
                 expectOutput()
             );
 
-            exec.handle(
+            executorCommand.handle(
                 new ArgvInput([
                     process.execPath,
                     'file.js',

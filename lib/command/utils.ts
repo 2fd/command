@@ -1,5 +1,44 @@
 import {format} from 'util';
-import {FormatterInterface} from '../../interfaces';
+import {FormatterInterface} from '../interfaces';
+
+export const TAB_SIZE = 4;
+
+export function commandSort(commandA: string, commandB: string): number {
+
+    let namespaceA = commandA.indexOf(':') >= 0;
+    let namespaceB = commandB.indexOf(':') >= 0;
+
+    if (namespaceA && !namespaceB) {
+        return 1;
+    
+    } else if (!namespaceA && namespaceB) {
+        return -1;
+    
+    } else {
+        return commandA.localeCompare(commandB);
+    }
+}
+
+export function toString(obj: any): string {
+    return Object.prototype.toString.call(obj);
+}
+
+type repeater = { repeat: (number) => string };
+
+export function repeat(str: string | repeater, len: number): string {
+
+    if((str as repeater).repeat)
+        return (str as repeater).repeat(len);
+
+    let result = '';
+
+    while (len > 0) {
+        result += str;
+        len--;
+    }
+
+    return result;
+}
 
 export const RESET = '\u001b[0m';
 export const CSS_TO_COMMAND = {
@@ -38,17 +77,17 @@ export const CSS_TO_COMMAND = {
 };
 
 export class Formatter {
-    
+
     reset: string;
-    
-    constructor(reset: string = ''){
+
+    constructor(reset: string = '') {
         this.reset = this.translate(reset);
     }
-    
+
     translate(styles: string): string {
         return '';
     }
-    
+
     /**
      * The first argument is a string that contains zero or more placeholders.
      * Each placeholder is replaced with the converted value from its
@@ -65,100 +104,100 @@ export class Formatter {
      * @see https://developer.chrome.com/devtools/docs/console-api#consolelogobject-object
      */
     format(str: string, ...replacements: Array<any>): string {
-    
+
         let finalReplacement: typeof replacements = [];
         replacements = replacements.slice();
-        
+
         let finalStr = str.replace(/(%+[c|j|i|f|o|O|d|s|%])/g, (match: string) => {
-            
+
             // ignore if no more replacements
             if (replacements.length === 0)
                 return match;
-                
+
             // ignore if match is escaped
-            if(match.length % 2 === 1)
+            if (match.length % 2 === 1)
                 return match;
-            
+
             // extract replacement value
             let replacement = replacements.shift();
             let placeholder = match.slice(-2);
             let percentages = match.slice(0, -2);
-            
-            switch(placeholder){
-                    
+
+            switch (placeholder) {
+
                 case '%o': // chrome object placeholder
                 case '%O': // chrome object placeholder
                     finalReplacement.push(replacement);
                     placeholder = '%j';
                     break;
-                
+
                 case '%c': // chrome style placeholder
                     finalReplacement.push(this.translate(replacement));
                     placeholder = '%s';
                     break;
-                    
+
                 case '%d': // node number placeholder
                     typeof replacement === 'object' ?
-                        finalReplacement.push(NaN):
+                        finalReplacement.push(NaN) :
                         finalReplacement.push(Number(replacement));
                     break;
-                    
+
                 case '%i': // chrome integer placeholder
                     typeof replacement === 'object' ?
-                        finalReplacement.push(NaN):
+                        finalReplacement.push(NaN) :
                         finalReplacement.push(parseInt(replacement));
                     placeholder = '%d';
                     break;
-                    
+
                 case '%f': // chrome float placeholder
                     typeof replacement === 'object' ?
-                        finalReplacement.push(NaN):
+                        finalReplacement.push(NaN) :
                         finalReplacement.push(parseFloat(replacement));
                     placeholder = '%d';
                     break;
-                    
+
                 case '%j': // node object placeholder
                 case '%s': // node string placeholder
                     finalReplacement.push(replacement);
                     break;
-                    
+
                 default: // not consume an argument.
                     replacements.push(replacement);
             }
-            
+
             return percentages + placeholder;
         });
-        
+
         // native format
         return format(finalStr + this.reset, ...finalReplacement);
     }
 }
 
 export class ColorFormatter extends Formatter {
-    
+
     reset: string = RESET;
-    
+
     translate(styles: string): string {
-        
-        if(typeof styles !== 'string')
+
+        if (typeof styles !== 'string')
             return this.reset || '';
-        
+
         let commandStyles = styles
             .split(';')
             .map((value) => {
-                
+
                 let css = value
                     .replace(/\s+/g, '')
                     .replace(/\/\*[.*]\*\//g, '')
                     .toLowerCase();
-                
-                if(CSS_TO_COMMAND[css])
+
+                if (CSS_TO_COMMAND[css])
                     return CSS_TO_COMMAND[css];
-                
+
                 return '';
             })
             .join('');
-        
+
         return this.reset + commandStyles;
     }
 }

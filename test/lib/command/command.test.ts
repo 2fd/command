@@ -96,7 +96,7 @@ describe('./lib/command/command', () => {
                     .handle(new ArgvInput([]), new DummyOutput);
             }).to.throw(Error, 'Cannot overwrite flag with name FlagName in command FlagNameRepeatCommand');
         });
-        
+
         it('action method accept input and output param', () => {
 
             class MinimunCommandImplementation extends Command<{}, {}> {
@@ -118,13 +118,13 @@ describe('./lib/command/command', () => {
         it('has a implicit help flag', () => {
 
             // HelpCommandImplementation --------------------
-            class HelpCommandImplementation extends Command<{}, {help?: boolean}> {
+            class HelpCommandImplementation extends Command<{}, { help?: boolean }> {
 
                 params = new NoParams();
 
                 flags = [];
 
-                action(input: InputInterface<{}, {help?: boolean}>) {
+                action(input: InputInterface<{}, { help?: boolean }>) {
                     expect(input).to.be.deep.equal({
                         argv: [],
                         exec: [],
@@ -140,13 +140,13 @@ describe('./lib/command/command', () => {
                 .handle(new ArgvInput([]), new DummyOutput);
 
             // HelpActiveCommandImplementation --------------------
-            class HelpActiveCommandImplementation extends Command<{}, {help?: boolean}> {
+            class HelpActiveCommandImplementation extends Command<{}, { help?: boolean }> {
 
                 params = new NoParams();
 
                 flags = [];
 
-                action(input: InputInterface<{}, {help?: boolean}>) {
+                action(input: InputInterface<{}, { help?: boolean }>) {
                     expect(input).to.be.deep.equal({
                         argv: [],
                         exec: [],
@@ -166,15 +166,16 @@ describe('./lib/command/command', () => {
 
             let exec = basename(process.execPath);
 
-            class SimpleCommand extends Command<{}, {help?: boolean}> {
+            class SimpleCommand extends Command<{}, { help?: boolean }> {
                 description = 'Simple COMMAND';
                 params = new NoParams();
                 flags = [];
                 action() { }
             }
-            
-            let expectSimpleOutput = new OuputExpected([
-                
+
+            let simpleCommand = new SimpleCommand;
+            let expectSimpleOutput = () => new OuputExpected([
+
                 (help: string, ...styles: string[]) => {
                     expect(help).to.be.eq(
                         '\n' +
@@ -182,12 +183,12 @@ describe('./lib/command/command', () => {
                         '\n\n' +
                         '    ' + '%cUsage: ' + exec + ' file.js [OPTIONS] ' +
                         '\n\n' +
-                        '    ' + '%c'         + '\n' +
-                        '    ' + '%cOPTIONS:' + '\n' +
+                        '    ' + '%c' + '\n' +
+                        '    ' + '%c[OPTIONS]:' + '\n' +
                         '    ' + '%c--help, -h    %cPrint this help' +
                         '\n'
                     )
-                    
+
                     expect(styles).to.be.deep.equal([
                         'color:green', // description
                         '', // usage
@@ -196,15 +197,28 @@ describe('./lib/command/command', () => {
                         'color:green', '', // help flag
                     ]);
                 },
-                
+
             ]);
 
-            (new SimpleCommand)
+            simpleCommand
+                .handle(new ArgvInput([
+                    process.execPath,
+                    'file.js'
+                ]), expectSimpleOutput());
+
+            simpleCommand
+                .handle(new ArgvInput([
+                    process.execPath,
+                    'file.js',
+                    '-h'
+                ]), expectSimpleOutput());
+
+            simpleCommand
                 .handle(new ArgvInput([
                     process.execPath,
                     'file.js',
                     '--help'
-                ]), expectSimpleOutput);
+                ]), expectSimpleOutput());
 
             class CompleteCommand extends Command<{}, {}> {
                 description = 'Complete COMMAND';
@@ -214,9 +228,10 @@ describe('./lib/command/command', () => {
                 ];
                 action() { }
             }
-                
-            let expectCompleteOutput = new OuputExpected([
-                
+
+            let completeCommand = new CompleteCommand;
+            let expectCompleteOutput = () => new OuputExpected([
+
                 (help: string, ...styles: string[]) => {
                     expect(help).to.be.eq(
                         '\n' +
@@ -224,12 +239,12 @@ describe('./lib/command/command', () => {
                         '\n\n' +
                         '    ' + '%cUsage: ' + exec + ' file.js [OPTIONS] require [...optionalList]' +
                         '\n\n' +
-                        '    ' + '%c'         + '\n' +
-                        '    ' + '%cOPTIONS:' + '\n' +
+                        '    ' + '%c' + '\n' +
+                        '    ' + '%c[OPTIONS]:' + '\n' +
                         '    ' + '%c-f, --flags    %cFLAG Description' + '\n' +
                         '    ' + '%c--help, -h     %cPrint this help' + '\n'
                     )
-                    
+
                     expect(styles).to.be.deep.equal([
                         'color:green', // description
                         '', // usage
@@ -238,17 +253,24 @@ describe('./lib/command/command', () => {
                         'color:green', '', // f flag
                         'color:green', '', // help flag
                     ])
-                    
+
                 },
-                
+
             ]);
 
-            (new CompleteCommand)
+            completeCommand
+                .handle(new ArgvInput([
+                    process.execPath,
+                    'file.js',
+                    '-h'
+                ]), expectCompleteOutput());
+
+            completeCommand
                 .handle(new ArgvInput([
                     process.execPath,
                     'file.js',
                     '--help'
-                ]), expectCompleteOutput);
+                ]), expectCompleteOutput());
 
         });
     });

@@ -11,7 +11,7 @@ import {
     HelpFlag
 } from  './flags';
 
-import {repeat, TAB_SIZE} from './helper';
+import {repeat, TAB_SIZE} from './utils';
 
 export class SoftCommand<F, P> implements CommandInterface<F, P> {
 
@@ -186,7 +186,7 @@ export class SoftCommand<F, P> implements CommandInterface<F, P> {
         });
 
         return [
-            ['OPTIONS:'],
+            ['[OPTIONS]:'],
             ...helpFlags,
         ];
     }
