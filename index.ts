@@ -24,32 +24,34 @@ import {
     FlagConstructor,
     BooleanFlag,
     HelpFlag,
-    NullFlag
+    NullFlag,
+    ValueFlag,
+    RequireFlag
 } from './lib/command/flags';
 
 export {
-    
+
     // interfaces
     CommandInterface,
     InputInterface,
     OutputInterface,
-    
+
     // commands
     Command,
     ExecutorCommand,
-    
+
     // input
     ArgvInput,
-    
+
     // output
     ConsoleOutput,
     ColorConsoleOutput,
-    
+
     // params
     IgnoreParams,
     NoParams,
     Param,
-    
+
     // flags
     FlagConstructor,
     BooleanFlag,
