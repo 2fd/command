@@ -111,12 +111,12 @@ export class RequireFlag<F> implements FlagInterface<F> {
 
     after(input: InputInterface<any, any>, output: OutputInterface): void {
         this.flag.after(input, output);
+        let value = input.flags[this.name];
 
         if (
-            input.flags[this.name] === undefined ||
-            input.flags[this.name] === null ||
-            isNaN(input.flags[this.name]) ||
-            input.flags[this.name].length === 0 
+            value === undefined || value === null ||
+            (typeof value === 'number' && isNaN(value)) ||
+            value.length === 0
         )
             throw new Error(`Flag ${this.flag.name} (${this.flag.list.join(', ')}) is required`);
     }
