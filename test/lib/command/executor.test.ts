@@ -33,8 +33,8 @@ describe('./lib/command/executor', () => {
         executorCommand.version = '0.1.0';
         executorCommand.description = 'ExecutorCommand Test';
         it('property description', () => {
-            expect(executorCommand.description).to.be.eq('ExecutorCommand Test')
-            expect(executorCommand.helpDescription()).to.be.eq('ExecutorCommand Test [v0.1.0]\n')
+            expect(executorCommand.description).to.be.eq('ExecutorCommand Test');
+            expect(executorCommand.helpDescription()).to.be.eq('ExecutorCommand Test [v0.1.0]\n');
         });
 
         describe('method addCommand', () => {
@@ -150,36 +150,36 @@ describe('./lib/command/executor', () => {
         });
 
         it('help', () => {
-            
+
             let node = basename(process.execPath);
             let expectOutput = () => new OuputExpected([
-                (help: string, ...styles:string[]) => {
-                    
+                (help: string, ...styles: string[]) => {
+
                     expect(help).to.be.eq(
                         '\n' +
                         '    ' + '%cExecutorCommand Test [v0.1.0]' +
                         '\n\n' +
                         '    ' + '%cUsage: ' + node + ' file.js [OPTIONS] [COMMAND]' +
                         '\n\n' +
-                        '    ' + '%c'         + '\n' +
+                        '    ' + '%c' + '\n' +
                         '    ' + '%c[COMMAND]:' + '\n' +
                         '    ' + '%cinstance          %cCommand: RemoteCommand' + '\n' +
-                        '    ' + '%cquick             %c-'                      + '\n' +
+                        '    ' + '%cquick             %c-' + '\n' +
                         '    ' + '%ctoInstace         %cCommand: RemoteCommand' + '\n' +
-                        '    ' + '%ctoQuick           %c-'                      + '\n' +
+                        '    ' + '%ctoQuick           %c-' + '\n' +
                         '    ' + '%clist:instace      %cCommand: RemoteCommand' + '\n' +
-                        '    ' + '%clist:quick        %c-'                      + '\n' +
+                        '    ' + '%clist:quick        %c-' + '\n' +
                         '    ' + '%clist:toInstace    %cCommand: RemoteCommand' + '\n' +
-                        '    ' + '%clist:toQuick      %c-'                      + '\n' +
+                        '    ' + '%clist:toQuick      %c-' + '\n' +
                         '    ' + '%cns:instace        %cCommand: RemoteCommand' + '\n' +
-                        '    ' + '%cns:quick          %c-'                      + '\n' +
+                        '    ' + '%cns:quick          %c-' + '\n' +
                         '    ' + '%cns:toInstace      %cCommand: RemoteCommand' + '\n' +
-                        '    ' + '%cns:toQuick        %c-'                      + '\n' +
-                        '    ' + '%c'         + '\n' +
+                        '    ' + '%cns:toQuick        %c-' + '\n' +
+                        '    ' + '%c' + '\n' +
                         '    ' + '%c[OPTIONS]:' + '\n' +
                         '    ' + '%c--help, -h    %cPrint this help' + '\n'
                     );
-                    
+
                     expect(styles).to.be.deep.equal([
                         'color:green', // description
                         '', // usage
@@ -201,7 +201,7 @@ describe('./lib/command/executor', () => {
                         'color:yellow', // options title
                         'color:green', '', // instace
                     ]);
-                    
+
                 }
             ]);
 

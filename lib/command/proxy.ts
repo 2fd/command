@@ -28,7 +28,7 @@ function requireCommand(path: string): CommandInterface<any, any> {
 
     } else if (name && command === undefined) {
         throw new Error(name + ' not found in ' + path);
-        
+
     } else {
         throw new Error(
             'Unexpected command type resolve: ' + path +
@@ -44,7 +44,7 @@ export class StringCommandProxy implements CommandInterface<any, any> {
 
     _path: string;
 
-    _command:  CommandInterface<any, any>;
+    _command: CommandInterface<any, any>;
 
     constructor(path: string) {
         this._path = path;

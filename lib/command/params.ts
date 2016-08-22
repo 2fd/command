@@ -6,7 +6,7 @@ export class ParamValue {
     isRequired: boolean;
     isList: boolean;
 
-    constructor(definition: string){
+    constructor(definition: string) {
 
         // is require?
         if (definition[0] === '[' && definition.slice(-1) === ']') {
@@ -34,13 +34,13 @@ export class ParamValue {
 
     parse(param: string, input: InputInterface<any, any>, output: OutputInterface): boolean {
 
-        if(this.isList) {
+        if (this.isList) {
             let list = input.params[this.name] || [];
             list.push(param);
             input.params[this.name] = list;
             return true;
 
-        } else if(!(this.name in input.params)) {
+        } else if (!(this.name in input.params)) {
             input.params[this.name] = param;
             return true;
         }
@@ -48,9 +48,9 @@ export class ParamValue {
         return false;
     }
 
-    validate(input: InputInterface<any, any>, output: OutputInterface){
+    validate(input: InputInterface<any, any>, output: OutputInterface) {
 
-        if(!this.isRequired) {
+        if (!this.isRequired) {
             return true;
 
         } else if (
@@ -60,7 +60,7 @@ export class ParamValue {
         ) {
             return true;
 
-        } else if(
+        } else if (
             this.name in input.params &&
             input.params !== ''
         ) {
@@ -69,7 +69,7 @@ export class ParamValue {
 
         return false;
     }
-    
+
 }
 
 /**
@@ -89,32 +89,32 @@ export class Param<P> implements ParamInterface<P> {
 
     constructor(definition: string) {
 
-        if(typeof definition !== 'string' || definition === '')
+        if (typeof definition !== 'string' || definition === '')
             throw new Error(
                 format('Invalid Param definition: %j', definition)
             );
 
         this.definition = definition;
-        
+
         this.values = definition
             .split(/\s+/i)
             .map(def => new ParamValue(def));
     }
 
-    after(input: InputInterface<any, any>, output: OutputInterface){
-        
+    after(input: InputInterface<any, any>, output: OutputInterface) {
+
         this
             .values
             .forEach(value => {
 
-                if(!value.validate(input, output))
+                if (!value.validate(input, output))
                     throw new Error(
                         format('Param %s is required', value.name)
                     );
-            })
+            });
     }
 
-    before(input: InputInterface<any, any>, output: OutputInterface){}
+    before(input: InputInterface<any, any>, output: OutputInterface) { }
 
     parse(param: string, input: InputInterface<any, any>, output: OutputInterface): void {
 
@@ -122,21 +122,21 @@ export class Param<P> implements ParamInterface<P> {
             .values
             .some((value: ParamValue) => value.parse(param, input, output));
 
-        if(!parsed)
+        if (!parsed)
             throw new Error('Unexpected param: ' + param);
     }
 }
 
 /**
- * 
+ *
  */
 export class NoParams implements ParamInterface<{}> {
 
     definition = '';
 
-    after(input: InputInterface<any, any>, output: OutputInterface){}
+    after(input: InputInterface<any, any>, output: OutputInterface) { }
 
-    before(input: InputInterface<any, any>, output: OutputInterface){}
+    before(input: InputInterface<any, any>, output: OutputInterface) { }
 
     parse(param: string, input: InputInterface<any, any>, output: OutputInterface): void {
         throw new Error('Unexpected param: ' + param);
@@ -147,9 +147,9 @@ export class IgnoreParams implements ParamInterface<{}> {
 
     definition = '';
 
-    after(input: InputInterface<any, any>, output: OutputInterface){}
+    after(input: InputInterface<any, any>, output: OutputInterface) { }
 
-    before(input: InputInterface<any, any>, output: OutputInterface){}
+    before(input: InputInterface<any, any>, output: OutputInterface) { }
 
     parse(param: string, input: InputInterface<any, any>, output: OutputInterface): void { }
 }

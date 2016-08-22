@@ -187,7 +187,7 @@ describe('./lib/command/command', () => {
                         '    ' + '%c[OPTIONS]:' + '\n' +
                         '    ' + '%c--help, -h    %cPrint this help' +
                         '\n'
-                    )
+                    );
 
                     expect(styles).to.be.deep.equal([
                         'color:green', // description
@@ -243,7 +243,7 @@ describe('./lib/command/command', () => {
                         '    ' + '%c[OPTIONS]:' + '\n' +
                         '    ' + '%c-f, --flags    %cFLAG Description' + '\n' +
                         '    ' + '%c--help, -h     %cPrint this help' + '\n'
-                    )
+                    );
 
                     expect(styles).to.be.deep.equal([
                         'color:green', // description
@@ -252,7 +252,7 @@ describe('./lib/command/command', () => {
                         'color:yellow', // options title
                         'color:green', '', // f flag
                         'color:green', '', // help flag
-                    ])
+                    ]);
 
                 },
 

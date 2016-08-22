@@ -69,8 +69,8 @@ describe('./lib/command/io', () => {
                 'array:1,2,3',
                 'null:null',
                 'undefined:undefined'
-            ].join(' '))
-        })
+            ].join(' '));
+        });
 
         it('support number placeholder (%d)', () => {
             expect(formatter.format(
@@ -92,8 +92,8 @@ describe('./lib/command/io', () => {
                 'array:NaN',
                 'null:NaN',
                 'undefined:NaN'
-            ].join(' '))
-        })
+            ].join(' '));
+        });
 
         it('support number placeholder (%i)', () => {
             expect(formatter.format(
@@ -115,8 +115,8 @@ describe('./lib/command/io', () => {
                 'array:NaN',
                 'null:NaN',
                 'undefined:NaN'
-            ].join(' '))
-        })
+            ].join(' '));
+        });
 
         it('support number placeholder (%f)', () => {
             expect(formatter.format(
@@ -138,8 +138,8 @@ describe('./lib/command/io', () => {
                 'array:NaN',
                 'null:NaN',
                 'undefined:NaN'
-            ].join(' '))
-        })
+            ].join(' '));
+        });
 
         it('support object placeholder (%j)', () => {
             expect(formatter.format(
@@ -161,8 +161,8 @@ describe('./lib/command/io', () => {
                 'array:[1,2,3]',
                 'null:null',
                 'undefined:undefined'
-            ].join(' '))
-        })
+            ].join(' '));
+        });
 
         it('support object placeholder (%o)', () => {
             expect(formatter.format(
@@ -184,8 +184,8 @@ describe('./lib/command/io', () => {
                 'array:[1,2,3]',
                 'null:null',
                 'undefined:undefined'
-            ].join(' '))
-        })
+            ].join(' '));
+        });
 
         it('support object placeholder (%O)', () => {
             expect(formatter.format(
@@ -207,8 +207,8 @@ describe('./lib/command/io', () => {
                 'array:[1,2,3]',
                 'null:null',
                 'undefined:undefined'
-            ].join(' '))
-        })
+            ].join(' '));
+        });
 
         it('support percent sign (%%)', () => {
             expect(formatter.format(
@@ -220,8 +220,8 @@ describe('./lib/command/io', () => {
                 'string:%2',
                 'string:%%s',
                 'string:%%3'
-            ].join(' '))
-        })
+            ].join(' '));
+        });
 
         it('ignore styles placeholder (%c)', () => {
             expect(formatter.format(
@@ -243,8 +243,8 @@ describe('./lib/command/io', () => {
                 'array:',
                 'null:',
                 'undefined:'
-            ].join(' '))
-        })
+            ].join(' '));
+        });
     });
 
     describe('ColorFormatter', () => {
@@ -272,8 +272,8 @@ describe('./lib/command/io', () => {
                 'array:1,2,3',
                 'null:null',
                 'undefined:undefined\u001b[0m'
-            ].join(' '))
-        })
+            ].join(' '));
+        });
 
         it('support number placeholder (%d)', () => {
             expect(formatter.format(
@@ -295,8 +295,8 @@ describe('./lib/command/io', () => {
                 'array:NaN',
                 'null:NaN',
                 'undefined:NaN\u001b[0m'
-            ].join(' '))
-        })
+            ].join(' '));
+        });
 
         it('support number placeholder (%i)', () => {
             expect(formatter.format(
@@ -318,8 +318,8 @@ describe('./lib/command/io', () => {
                 'array:NaN',
                 'null:NaN',
                 'undefined:NaN\u001b[0m'
-            ].join(' '))
-        })
+            ].join(' '));
+        });
 
         it('support number placeholder (%f)', () => {
             expect(formatter.format(
@@ -341,8 +341,8 @@ describe('./lib/command/io', () => {
                 'array:NaN',
                 'null:NaN',
                 'undefined:NaN\u001b[0m'
-            ].join(' '))
-        })
+            ].join(' '));
+        });
 
         it('support object placeholder (%j)', () => {
             expect(formatter.format(
@@ -364,8 +364,8 @@ describe('./lib/command/io', () => {
                 'array:[1,2,3]',
                 'null:null',
                 'undefined:undefined\u001b[0m'
-            ].join(' '))
-        })
+            ].join(' '));
+        });
 
         it('support object placeholder (%o)', () => {
             expect(formatter.format(
@@ -387,8 +387,8 @@ describe('./lib/command/io', () => {
                 'array:[1,2,3]',
                 'null:null',
                 'undefined:undefined\u001b[0m'
-            ].join(' '))
-        })
+            ].join(' '));
+        });
 
         it('support object placeholder (%O)', () => {
             expect(formatter.format(
@@ -410,8 +410,8 @@ describe('./lib/command/io', () => {
                 'array:[1,2,3]',
                 'null:null',
                 'undefined:undefined\u001b[0m'
-            ].join(' '))
-        })
+            ].join(' '));
+        });
 
         it('support percent sign (%%)', () => {
             expect(formatter.format(
@@ -423,8 +423,8 @@ describe('./lib/command/io', () => {
                 'string:%2',
                 'string:%%s',
                 'string:%%3\u001b[0m'
-            ].join(' '))
-        })
+            ].join(' '));
+        });
 
         it('support styles placeholder (%c)', () => {
             expect(formatter.format(
@@ -446,8 +446,8 @@ describe('./lib/command/io', () => {
                 'array:\u001b[0m',
                 'null:\u001b[0m',
                 'undefined:\u001b[0m\u001b[0m'
-            ].join(' '))
-        })
+            ].join(' '));
+        });
 
         Object
             .keys(CSS_TO_COMMAND)
@@ -458,9 +458,9 @@ describe('./lib/command/io', () => {
                 it(`support styles placeholder (%c: ${style})`, () => {
                     expect(formatter.format(
                         '%cStyle', style
-                    )).to.be.eq(RESET + code + 'Style' + RESET)
-                })
-            })
+                    )).to.be.eq(RESET + code + 'Style' + RESET);
+                });
+            });
 
         it(`support multiple styles in a single placeholder (%c)`, () => {
             expect(formatter.format(
@@ -468,7 +468,7 @@ describe('./lib/command/io', () => {
             )).to.be.eq(
                 RESET + '\u001b[1m\u001b[31mStyles1 ' +
                 RESET + '\u001b[4m\u001b[37m\u001b[44mStyles2' + RESET
-                )
-        })
+                );
+        });
     });
 });

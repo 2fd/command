@@ -63,7 +63,7 @@ describe('./lib/command/flags', () => {
 
             let emptyValueInput = new ArgvInput(['--string']);
             expect(() => consume(stringValueFlag, emptyValueInput))
-                .throw(Error, 'Flag string-flag (--string, -s) expect a value')
+                .throw(Error, 'Flag string-flag (--string, -s) expect a value');
 
         });
 
@@ -140,7 +140,7 @@ describe('./lib/command/flags', () => {
 
             let emptyValueInput = new ArgvInput(['--string']);
             expect(() => consume(stringValueFlag, emptyValueInput))
-                .throw(Error, 'Flag string-list-flag (--string, -s) expect a value')
+                .throw(Error, 'Flag string-list-flag (--string, -s) expect a value');
 
         });
 
@@ -229,21 +229,21 @@ describe('./lib/command/flags', () => {
                 new ListValueFlag(
                     'default-string-list-flag', ['--string', '-s'], 'string flag', String, def
                 )
-            )).throw(Error, 'Flag default-string-list-flag (--string, -s) default value must be an Array')
+            )).throw(Error, 'Flag default-string-list-flag (--string, -s) default value must be an Array');
 
-        })
+        });
     });
 
     describe('RequireFlag', () => {
 
         let requireFlag = new RequireFlag( new ValueFlag('require-string-flag', ['--req', '-r'], 'string value') );
-        
+
         it('must be require', () => {
-            
+
             let input = new ArgvInput([]);
             expect(() => consume(requireFlag, input))
                 .throw(Error, 'Flag require-string-flag (--req, -r) is required');
-        })
+        });
     });
 
 });

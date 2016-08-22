@@ -147,7 +147,7 @@ describe('./lib/command/param', () => {
         it('throw error if push any param', () => {
 
             let noParams = new NoParams();
-            let input = new ArgvInput(['param1'])
+            let input = new ArgvInput(['param1']);
             expect(() => consume(noParams, input)).to.throw(Error, 'Unexpected param: param1');
 
         });

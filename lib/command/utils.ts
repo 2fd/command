@@ -10,10 +10,10 @@ export function commandSort(commandA: string, commandB: string): number {
 
     if (namespaceA && !namespaceB) {
         return 1;
-    
+
     } else if (!namespaceA && namespaceB) {
         return -1;
-    
+
     } else {
         return commandA.localeCompare(commandB);
     }
@@ -23,12 +23,14 @@ export function toString(obj: any): string {
     return Object.prototype.toString.call(obj);
 }
 
-type repeater = { repeat: (number) => string };
+export interface Repeater {
+    repeat(num: number): string;
+};
 
-export function repeat(str: string | repeater, len: number): string {
+export function repeat(str: string | Repeater, len: number): string {
 
-    if((str as repeater).repeat)
-        return (str as repeater).repeat(len);
+    if ((str as Repeater).repeat)
+        return (str as Repeater).repeat(len);
 
     let result = '';
 
@@ -99,7 +101,7 @@ export class Formatter {
      *  %c - Formats the output string according to CSS styles you provide.
      *  %j | %o | %O - JSON. Replaced with the string '[Circular]' if the argument contains circular references
      *  %% - single percent sign ('%'). This does not consume an argument.
-     * 
+     *
      * @see https://nodejs.org/api/util.html#util_util_format_format
      * @see https://developer.chrome.com/devtools/docs/console-api#consolelogobject-object
      */
