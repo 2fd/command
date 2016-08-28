@@ -26,7 +26,8 @@ import {
     HelpFlag,
     NullFlag,
     ValueFlag,
-    RequireFlag
+    ListValueFlag,
+    RequireFlag,
 } from './lib/command/flags';
 
 export {
@@ -57,4 +58,7 @@ export {
     BooleanFlag,
     HelpFlag,
     NullFlag,
+    ValueFlag,
+    ListValueFlag,
+    RequireFlag,
 };
