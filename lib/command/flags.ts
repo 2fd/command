@@ -85,7 +85,7 @@ export type HelpFlagInput = {
 export class HelpFlag extends BooleanFlag<HelpFlagInput> implements FlagInterface<HelpFlagInput> {
 
     constructor() {
-        super('help', ['--help', '-h'], 'Print this help');
+        super('help', ['-h', '--help'], 'Print this help');
     }
 }
 

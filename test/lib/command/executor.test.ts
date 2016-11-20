@@ -177,7 +177,7 @@ describe('./lib/command/executor', () => {
                         '    ' + '%cns:toQuick        %c-' + '\n' +
                         '    ' + '%c' + '\n' +
                         '    ' + '%c[OPTIONS]:' + '\n' +
-                        '    ' + '%c--help, -h    %cPrint this help' + '\n'
+                        '    ' + '%c-h, --help    %cPrint this help' + '\n'
                     );
 
                     expect(styles).to.be.deep.equal([
