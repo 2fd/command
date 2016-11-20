@@ -1,5 +1,9 @@
-import {InputInterface, OutputInterface} from '../../interfaces';
-import {basename, resolve, relative} from 'path';
+import { InputInterface, OutputInterface } from '../../interfaces';
+import { basename, relative, dirname } from 'path';
+
+
+const executionPaths: string[] = process.env.PATH
+    .split(process.platform === 'win32' ? ';' : ':');
 
 export class ArgvInput implements InputInterface<any, any> {
 
@@ -16,12 +20,22 @@ export class ArgvInput implements InputInterface<any, any> {
         this.argv = argv.slice();
         this.exec = exec.slice();
 
-        if ( exec.length === 0 && argv[0] === process.execPath) {
+        if (
+            exec.length === 0 && // not custom
+            argv[0] === process.execPath // is standar execution
+        ) {
             let execPath = this.argv.shift();
             let entrypoint = this.argv.shift();
 
-            this.exec.push(basename(execPath));
-            this.exec.push(entrypoint);
+            // command exists on execution path 
+            if (executionPaths.indexOf(dirname(entrypoint)) >= 0) {
+                this.exec.push(basename(entrypoint));
+
+            } else {
+                this.exec.push(basename(execPath));
+                this.exec.push(relative(process.cwd(), entrypoint));
+            }
+
         }
     }
 }

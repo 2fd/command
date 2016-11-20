@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {basename} from 'path';
+import {basename, relative} from 'path';
 import {ArgvInput, Formatter, ColorFormatter} from '../../../lib/command/io';
 import {RESET, CSS_TO_COMMAND} from '../../../lib/command/utils';
 
@@ -27,16 +27,28 @@ describe('./lib/command/io', () => {
             });
         });
 
+        it('Detects if it runs globally', () => {
 
-        it('ignore execPath and entrypoint', () => {
+            let input = new ArgvInput([process.execPath, '/usr/bin/command', '--flag', 'param']);
 
-            let input = new ArgvInput([process.execPath, 'entry-file.js', '--flag', 'param']);
+            expect(input).to.be.deep.equal({
+                argv: ['--flag', 'param'],
+                exec: ['command'],
+                flags: {},
+                params: {},
+            });
+        });
+
+
+        it('Detects if it runs locally', () => {
+
+            let input = new ArgvInput([process.execPath, __filename, '--flag', 'param']);
 
             expect(input).to.be.deep.equal({
                 argv: ['--flag', 'param'],
                 exec: [
                     basename(process.execPath),
-                    'entry-file.js'
+                    relative(process.cwd(), __filename)
                 ],
                 flags: {},
                 params: {},

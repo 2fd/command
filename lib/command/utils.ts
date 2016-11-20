@@ -1,4 +1,5 @@
 import {format} from 'util';
+import {} from 'path';
 import {FormatterInterface} from '../interfaces';
 
 export const TAB_SIZE = 4;
