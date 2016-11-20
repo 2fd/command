@@ -1,9 +1,12 @@
 {
     "compileOnSave": true,
     "compilerOptions": {
-        "experimentalDecorators": true,
         "moduleResolution": "node",
-        "target": "es5"
+        "target": "es5",
+        "types": [
+            "node",
+            "mocha"
+        ]
     },
     "exclude": [
         "node_modules"

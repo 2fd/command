@@ -25,6 +25,9 @@
   "homepage": "https://github.com/2fd/command#readme",
   "dependencies": {},
   "devDependencies": {
+    "@types/chai": "^3.4.34",
+    "@types/mocha": "^2.2.33",
+    "@types/node": "^6.0.48",
     "chai": "^3.5.0",
     "mocha": "^2.4.5"
   }
