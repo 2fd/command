@@ -3,8 +3,10 @@
  */
 export interface OutputInterface {
     
+    log(...obj: Array<any>): void;
     log(msj: string, ...obj: Array<any>): void;
     
+    error(...obj: Array<any>): void;
     error(msj: string, ...obj: Array<any>): void;
 }
 

@@ -1,5 +1,5 @@
-import {InputInterface, OutputInterface, FormatterInterface} from '../../interfaces';
-import {Formatter, ColorFormatter} from '../utils';
+import { InputInterface, OutputInterface, FormatterInterface } from '../../interfaces';
+import { Formatter, ColorFormatter } from '../utils';
 
 /**
  * Output from test
@@ -45,15 +45,23 @@ export class ConsoleOutput implements OutputInterface {
     formatter: FormatterInterface = new Formatter;
 
     log(msj: string, ...obj: Array<any>): void {
-        console.log(
-            this.formatter.format(msj, ...obj)
-        );
+
+        if (typeof msj === 'string')
+            console.log(
+                this.formatter.format(msj, ...obj)
+            );
+
+        console.log(msj, ...obj);
     }
 
     error(msj: string, ...obj: Array<any>): void {
-        console.error(
-            this.formatter.format(msj, ...obj)
-        );
+
+        if (typeof msj === 'string')
+            console.error(
+                this.formatter.format(msj, ...obj)
+            );
+
+        console.error(msj, ...obj);
     }
 }
 
@@ -65,14 +73,22 @@ export class ColorConsoleOutput implements OutputInterface {
     };
 
     log(msj: string, ...obj: Array<any>): void {
-        console.log(
-            this.formatters.log.format(msj, ...obj)
-        );
+
+        if (typeof msj === 'string')
+            console.log(
+                this.formatters.log.format(msj, ...obj)
+            );
+
+        console.log(msj, ...obj);
     }
 
     error(msj: string, ...obj: Array<any>): void {
-        console.error(
-            this.formatters.error.format(msj, ...obj)
-        );
+
+        if (typeof msj === 'string')
+            console.error(
+                this.formatters.error.format(msj, ...obj)
+            );
+
+        console.error(msj, ...obj);
     }
 }
