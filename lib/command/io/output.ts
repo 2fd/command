@@ -46,22 +46,30 @@ export class ConsoleOutput implements OutputInterface {
 
     log(msj: string, ...obj: Array<any>): void {
 
-        if (typeof msj === 'string')
+        if (typeof msj === 'string') {
             console.log(
                 this.formatter.format(msj, ...obj)
             );
+            
+        } else {
+            console.log(msj, ...obj);
 
-        console.log(msj, ...obj);
+        }
+
     }
 
     error(msj: string, ...obj: Array<any>): void {
 
-        if (typeof msj === 'string')
+        if (typeof msj === 'string') {
+
             console.error(
                 this.formatter.format(msj, ...obj)
             );
+        } else {
+            console.error(msj, ...obj);
 
-        console.error(msj, ...obj);
+        }
+
     }
 }
 
@@ -74,21 +82,23 @@ export class ColorConsoleOutput implements OutputInterface {
 
     log(msj: string, ...obj: Array<any>): void {
 
-        if (typeof msj === 'string')
+        if (typeof msj === 'string') {
             console.log(
                 this.formatters.log.format(msj, ...obj)
             );
-
-        console.log(msj, ...obj);
+        } else {
+            console.log(msj, ...obj);
+        }
     }
 
     error(msj: string, ...obj: Array<any>): void {
 
-        if (typeof msj === 'string')
+        if (typeof msj === 'string') {
             console.error(
                 this.formatters.error.format(msj, ...obj)
             );
-
-        console.error(msj, ...obj);
+        } else {
+            console.error(msj, ...obj);
+        }
     }
 }
