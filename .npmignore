@@ -16,3 +16,5 @@ typings
 *.ts
 !*.d.ts
 types
+.github
+.releaserc.json
