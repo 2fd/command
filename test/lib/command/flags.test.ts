@@ -1,5 +1,5 @@
-import {expect} from 'chai';
-import {consume} from './utils';
+import {describe, it, assert} from '../../harness';
+import {consume, plain} from './utils';
 import {InputInterface, FlagInterface} from '../../../lib/interfaces';
 import {ArgvInput, DummyOutput} from '../../../lib/command/io';
 import {NullFlag, BooleanFlag, RequireFlag, ValueFlag, ListValueFlag} from '../../../lib/command/flags';
@@ -12,7 +12,7 @@ describe('./lib/command/flags', () => {
 
             let nullFlag = new NullFlag();
 
-            expect(nullFlag.list).to.be.deep.equal([]);
+            assert.deepStrictEqual(nullFlag.list, []);
         });
     });
 
@@ -23,7 +23,7 @@ describe('./lib/command/flags', () => {
         it('define FALSE by default', () => {
 
             let input = new ArgvInput([]);
-            expect(consume(booleanFlag, input)).to.be.deep.equal({
+            assert.deepStrictEqual(plain(consume(booleanFlag, input)), {
                 argv: [],
                 exec: [],
                 flags: {
@@ -36,7 +36,7 @@ describe('./lib/command/flags', () => {
         it('define TRUE if is parsed', () => {
 
             let input = new ArgvInput(['--boolean']);
-            expect(consume(booleanFlag, input)).to.be.deep.equal({
+            assert.deepStrictEqual(plain(consume(booleanFlag, input)), {
                 argv: [],
                 exec: [],
                 flags: {
@@ -57,20 +57,20 @@ describe('./lib/command/flags', () => {
         it('expect a value', () => {
 
             let otherFlagInput = new ArgvInput(['--string', '--otherFlag']);
-            expect(() => consume(stringValueFlag, otherFlagInput))
-                .throw(Error, 'Flag string-flag (--string, -s) expect a value');
+            assert.throws(() => consume(stringValueFlag, otherFlagInput),
+                { message: 'Flag string-flag (--string, -s) expect a value' });
 
 
             let emptyValueInput = new ArgvInput(['--string']);
-            expect(() => consume(stringValueFlag, emptyValueInput))
-                .throw(Error, 'Flag string-flag (--string, -s) expect a value');
+            assert.throws(() => consume(stringValueFlag, emptyValueInput),
+                { message: 'Flag string-flag (--string, -s) expect a value' });
 
         });
 
         it('extract value', () => {
 
             let input = new ArgvInput(['--string', 'random ;)']);
-            expect(consume(stringValueFlag, input)).to.be.deep.equal({
+            assert.deepStrictEqual(plain(consume(stringValueFlag, input)), {
                 argv: [],
                 exec: [],
                 flags: {
@@ -87,7 +87,7 @@ describe('./lib/command/flags', () => {
         it('parse value', () => {
 
             let input = new ArgvInput(['--string', 'random ;)']);
-            expect(consume(parserStringValueFlag, input)).to.be.deep.equal({
+            assert.deepStrictEqual(plain(consume(parserStringValueFlag, input)), {
                 argv: [],
                 exec: [],
                 flags: {
@@ -104,7 +104,7 @@ describe('./lib/command/flags', () => {
         it('support default value', () => {
 
             let input = new ArgvInput(['--string', 'random ;)']);
-            expect(consume(defaultStringValueFlag, input)).to.be.deep.equal({
+            assert.deepStrictEqual(plain(consume(defaultStringValueFlag, input)), {
                 argv: [],
                 exec: [],
                 flags: {
@@ -114,7 +114,7 @@ describe('./lib/command/flags', () => {
             });
 
             let emptyInput = new ArgvInput([]);
-            expect(consume(defaultStringValueFlag, emptyInput)).to.be.deep.equal({
+            assert.deepStrictEqual(plain(consume(defaultStringValueFlag, emptyInput)), {
                 argv: [],
                 exec: [],
                 flags: {
@@ -134,20 +134,20 @@ describe('./lib/command/flags', () => {
         it('expect a value', () => {
 
             let otherFlagInput = new ArgvInput(['--string', '--otherFlag']);
-            expect(() => consume(stringValueFlag, otherFlagInput))
-                .throw(Error, 'Flag string-list-flag (--string, -s) expect a value');
+            assert.throws(() => consume(stringValueFlag, otherFlagInput),
+                { message: 'Flag string-list-flag (--string, -s) expect a value' });
 
 
             let emptyValueInput = new ArgvInput(['--string']);
-            expect(() => consume(stringValueFlag, emptyValueInput))
-                .throw(Error, 'Flag string-list-flag (--string, -s) expect a value');
+            assert.throws(() => consume(stringValueFlag, emptyValueInput),
+                { message: 'Flag string-list-flag (--string, -s) expect a value' });
 
         });
 
         it('extract values', () => {
 
             let input = new ArgvInput(['--string', 'random ;)']);
-            expect(consume(stringValueFlag, input)).to.be.deep.equal({
+            assert.deepStrictEqual(plain(consume(stringValueFlag, input)), {
                 argv: [],
                 exec: [],
                 flags: {
@@ -157,7 +157,7 @@ describe('./lib/command/flags', () => {
             });
 
             let inputMultiple = new ArgvInput(['--string', 'random ;)', '--string', 'random 2 ;)']);
-            expect(consume(stringValueFlag, inputMultiple)).to.be.deep.equal({
+            assert.deepStrictEqual(plain(consume(stringValueFlag, inputMultiple)), {
                 argv: [],
                 exec: [],
                 flags: {
@@ -174,7 +174,7 @@ describe('./lib/command/flags', () => {
         it('parse values', () => {
 
             let input = new ArgvInput(['--string', 'random ;)']);
-            expect(consume(parserStringValueFlag, input)).to.be.deep.equal({
+            assert.deepStrictEqual(plain(consume(parserStringValueFlag, input)), {
                 argv: [],
                 exec: [],
                 flags: {
@@ -184,7 +184,7 @@ describe('./lib/command/flags', () => {
             });
 
             let inputMultiple = new ArgvInput(['--string', 'random ;)', '--string', 'random 2 ;)']);
-            expect(consume(parserStringValueFlag, inputMultiple)).to.be.deep.equal({
+            assert.deepStrictEqual(plain(consume(parserStringValueFlag, inputMultiple)), {
                 argv: [],
                 exec: [],
                 flags: {
@@ -201,7 +201,7 @@ describe('./lib/command/flags', () => {
         it('support default value', () => {
 
             let input = new ArgvInput(['--string', 'random ;)']);
-            expect(consume(defaultStringValueFlag, input)).to.be.deep.equal({
+            assert.deepStrictEqual(plain(consume(defaultStringValueFlag, input)), {
                 argv: [],
                 exec: [],
                 flags: {
@@ -211,7 +211,7 @@ describe('./lib/command/flags', () => {
             });
 
             let emptyInput = new ArgvInput([]);
-            expect(consume(defaultStringValueFlag, emptyInput)).to.be.deep.equal({
+            assert.deepStrictEqual(plain(consume(defaultStringValueFlag, emptyInput)), {
                 argv: [],
                 exec: [],
                 flags: {
@@ -225,11 +225,11 @@ describe('./lib/command/flags', () => {
 
             let def: any = 'defaultString';
 
-            expect(() => (
+            assert.throws(() => (
                 new ListValueFlag(
                     'default-string-list-flag', ['--string', '-s'], 'string flag', String, def
                 )
-            )).throw(Error, 'Flag default-string-list-flag (--string, -s) default value must be an Array');
+            ), { message: 'Flag default-string-list-flag (--string, -s) default value must be an Array' });
 
         });
     });
@@ -241,8 +241,8 @@ describe('./lib/command/flags', () => {
         it('must be require', () => {
 
             let input = new ArgvInput([]);
-            expect(() => consume(requireFlag, input))
-                .throw(Error, 'Flag require-string-flag (--req, -r) is required');
+            assert.throws(() => consume(requireFlag, input),
+                { message: 'Flag require-string-flag (--req, -r) is required' });
         });
     });
 

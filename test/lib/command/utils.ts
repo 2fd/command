@@ -46,3 +46,13 @@ export function consume(consumer: FlagInterface<any> | ParamInterface<any>, inpu
 
     return input;
 }
+
+/**
+ * Shallow copy of own enumerable properties, so instances can be compared
+ * with object literals using `assert.deepStrictEqual` (which checks prototypes).
+ */
+export function plain(obj: any): any {
+    let copy: any = {};
+    Object.keys(obj).forEach(key => copy[key] = obj[key]);
+    return copy;
+}

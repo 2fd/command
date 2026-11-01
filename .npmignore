@@ -13,3 +13,4 @@ typings
 .gitignore
 *.ts
 !*.d.ts
+types

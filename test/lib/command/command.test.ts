@@ -1,4 +1,5 @@
-import {expect} from 'chai';
+import {describe, it, assert} from '../../harness';
+import {plain} from './utils';
 import {basename} from 'path';
 import {InputInterface, OutputInterface} from '../../../lib/interfaces';
 import {ArgvInput, DummyOutput} from '../../../lib/command/io';
@@ -16,20 +17,20 @@ describe('./lib/command/command', () => {
             // EmptyCommandImplementation ---------------------
             class EmptyCommandImplementation extends Command<any, any> { }
 
-            expect(() => {
+            assert.throws(() => {
                 (new EmptyCommandImplementation)
                     .handle(new ArgvInput([]), new DummyOutput);
-            }).to.throw(Error, 'Command must be define params property');
+            }, { message: 'Command must be define params property' });
 
             // ParamsCommandImplementation ---------------------
             class ParamsCommandImplementation extends Command<any, any> {
                 params = new NoParams();
             }
 
-            expect(() => {
+            assert.throws(() => {
                 (new ParamsCommandImplementation)
                     .handle(new ArgvInput([]), new DummyOutput);
-            }).to.throw(Error, 'Command must be define flag list property');
+            }, { message: 'Command must be define flag list property' });
 
             // FlagssCommandImplementation --------------------
             class FlagssCommandImplementation extends Command<any, any> {
@@ -37,10 +38,10 @@ describe('./lib/command/command', () => {
                 flags = [];
             }
 
-            expect(() => {
+            assert.throws(() => {
                 (new FlagssCommandImplementation)
                     .handle(new ArgvInput([]), new DummyOutput);
-            }).to.throw(Error, 'Command must be implement action method');
+            }, { message: 'Command must be implement action method' });
 
             // MinimunCommandImplementation --------------------
             class MinimunCommandImplementation extends Command<any, any> {
@@ -52,10 +53,10 @@ describe('./lib/command/command', () => {
                 action() { }
             }
 
-            expect(() => {
+            assert.doesNotThrow(() => {
                 (new MinimunCommandImplementation)
                     .handle(new ArgvInput([]), new DummyOutput);
-            }).to.not.throw(Error);
+            });
         });
 
         it('flags can not be repeated', () => {
@@ -73,10 +74,10 @@ describe('./lib/command/command', () => {
                 action() { }
             }
 
-            expect(() => {
+            assert.throws(() => {
                 (new FlagRepeatCommand)
                     .handle(new ArgvInput([]), new DummyOutput);
-            }).to.throw(Error, 'Cannot overwrite flag -f in command FlagRepeatCommand');
+            }, { message: 'Cannot overwrite flag -f in command FlagRepeatCommand' });
 
             // FlagNameRepeatCommand --------------------
             class FlagNameRepeatCommand extends Command<any, any> {
@@ -91,10 +92,10 @@ describe('./lib/command/command', () => {
                 action() { }
             }
 
-            expect(() => {
+            assert.throws(() => {
                 (new FlagNameRepeatCommand)
                     .handle(new ArgvInput([]), new DummyOutput);
-            }).to.throw(Error, 'Cannot overwrite flag with name FlagName in command FlagNameRepeatCommand');
+            }, { message: 'Cannot overwrite flag with name FlagName in command FlagNameRepeatCommand' });
         });
 
         it('action method accept input and output param', () => {
@@ -106,8 +107,8 @@ describe('./lib/command/command', () => {
                 flags = [];
 
                 action(input: InputInterface<{}, {}>, output: OutputInterface) {
-                    expect(input).to.be.a('object');
-                    expect(input).to.be.a('object');
+                    assert.strictEqual(typeof input, 'object');
+                    assert.strictEqual(typeof input, 'object');
                 }
             }
 
@@ -125,7 +126,7 @@ describe('./lib/command/command', () => {
                 flags = [];
 
                 action(input: InputInterface<{}, { help?: boolean }>) {
-                    expect(input).to.be.deep.equal({
+                    assert.deepStrictEqual(plain(input), {
                         argv: [],
                         exec: [],
                         flags: {
@@ -147,7 +148,7 @@ describe('./lib/command/command', () => {
                 flags = [];
 
                 action(input: InputInterface<{}, { help?: boolean }>) {
-                    expect(input).to.be.deep.equal({
+                    assert.deepStrictEqual(plain(input), {
                         argv: [],
                         exec: [],
                         flags: {
@@ -177,7 +178,7 @@ describe('./lib/command/command', () => {
             let expectSimpleOutput = () => new OuputExpected([
 
                 (help: string, ...styles: string[]) => {
-                    expect(help).to.be.eq(
+                    assert.strictEqual(help, 
                         '\n' +
                         '    ' + '%cSimple COMMAND' +
                         '\n\n' +
@@ -189,7 +190,7 @@ describe('./lib/command/command', () => {
                         '\n'
                     );
 
-                    expect(styles).to.be.deep.equal([
+                    assert.deepStrictEqual(styles, [
                         'color:green', // description
                         '', // usage
                         '', // start options
@@ -233,7 +234,7 @@ describe('./lib/command/command', () => {
             let expectCompleteOutput = () => new OuputExpected([
 
                 (help: string, ...styles: string[]) => {
-                    expect(help).to.be.eq(
+                    assert.strictEqual(help, 
                         '\n' +
                         '    ' + '%cComplete COMMAND' +
                         '\n\n' +
@@ -245,7 +246,7 @@ describe('./lib/command/command', () => {
                         '    ' + '%c-h, --help     %cPrint this help' + '\n'
                     );
 
-                    expect(styles).to.be.deep.equal([
+                    assert.deepStrictEqual(styles, [
                         'color:green', // description
                         '', // usage
                         '', // start options

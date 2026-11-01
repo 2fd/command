@@ -1,5 +1,5 @@
-import {expect} from 'chai';
-import {consume} from './utils';
+import {describe, it, assert} from '../../harness';
+import {consume, plain} from './utils';
 import {ArgvInput} from '../../../lib/command/io/input';
 import {Param, NoParams, IgnoreParams} from '../../../lib/command/params';
 
@@ -13,10 +13,10 @@ describe('./lib/command/param', () => {
             let unexpectInput1 = new ArgvInput([]);
             let expectInput1 = new ArgvInput(['expect-value1']);
 
-            expect(() => consume(requireValue, unexpectInput1))
-                .to.throw(Error, 'Param val is required');
+            assert.throws(() => consume(requireValue, unexpectInput1),
+                { message: 'Param val is required' });
 
-            expect(consume(requireValue, expectInput1)).to.be.deep.equal({
+            assert.deepStrictEqual(plain(consume(requireValue, expectInput1)), {
                 argv: [],
                 exec: [],
                 flags: {},
@@ -31,13 +31,13 @@ describe('./lib/command/param', () => {
             let unexpectInput2 = new ArgvInput(['expect-value1']);
             let expectInput2 = new ArgvInput(['expect-value1', 'expect-value2']);
 
-            expect(() => consume(requireMultipleValue, unexpectEmptyInput))
-                .to.throw(Error, 'Param val1 is required');
+            assert.throws(() => consume(requireMultipleValue, unexpectEmptyInput),
+                { message: 'Param val1 is required' });
 
-            expect(() => consume(requireMultipleValue, unexpectInput2))
-                .to.throw(Error, 'Param val2 is required');
+            assert.throws(() => consume(requireMultipleValue, unexpectInput2),
+                { message: 'Param val2 is required' });
 
-            expect(consume(requireMultipleValue, expectInput2)).to.be.deep.equal({
+            assert.deepStrictEqual(plain(consume(requireMultipleValue, expectInput2)), {
                 argv: [],
                 exec: [],
                 flags: {},
@@ -56,14 +56,14 @@ describe('./lib/command/param', () => {
             let singleParamInput = new ArgvInput(['paramA']);
             let multipleParamInput = new ArgvInput(['param1', 'param2', 'param3']);
 
-            expect(consume(optionalParam, emptyParamInput)).to.be.deep.equal({
+            assert.deepStrictEqual(plain(consume(optionalParam, emptyParamInput)), {
                 argv: [],
                 exec: [],
                 flags: {},
                 params: {},
             });
 
-            expect(consume(optionalParam, singleParamInput)).to.be.deep.equal({
+            assert.deepStrictEqual(plain(consume(optionalParam, singleParamInput)), {
                 argv: [],
                 exec: [],
                 flags: {},
@@ -73,8 +73,8 @@ describe('./lib/command/param', () => {
             });
 
 
-            expect(() => consume(optionalParam, multipleParamInput))
-                .to.throw(Error, 'Unexpected param: param2');
+            assert.throws(() => consume(optionalParam, multipleParamInput),
+                { message: 'Unexpected param: param2' });
         });
 
         it('accep list of 1 or more values', () => {
@@ -84,10 +84,10 @@ describe('./lib/command/param', () => {
             let singleParamInput = new ArgvInput(['paramA']);
             let multipleParamInput = new ArgvInput(['param1', 'param2', 'param3']);
 
-            expect(() => consume(requireList, emptyParamInput))
-                .to.throw(Error, 'Param list is required');
+            assert.throws(() => consume(requireList, emptyParamInput),
+                { message: 'Param list is required' });
 
-            expect(consume(requireList, singleParamInput)).to.be.deep.equal({
+            assert.deepStrictEqual(plain(consume(requireList, singleParamInput)), {
                 argv: [],
                 exec: [],
                 flags: {},
@@ -97,7 +97,7 @@ describe('./lib/command/param', () => {
             });
 
 
-            expect(consume(requireList, multipleParamInput)).to.be.deep.equal({
+            assert.deepStrictEqual(plain(consume(requireList, multipleParamInput)), {
                 argv: [],
                 exec: [],
                 flags: {},
@@ -114,14 +114,14 @@ describe('./lib/command/param', () => {
             let singleParamInput = new ArgvInput(['paramA']);
             let multipleParamInput = new ArgvInput(['param1', 'param2', 'param3']);
 
-            expect(consume(requireList, emptyParamInput)).to.be.deep.equal({
+            assert.deepStrictEqual(plain(consume(requireList, emptyParamInput)), {
                 argv: [],
                 exec: [],
                 flags: {},
                 params: {},
             });
 
-            expect(consume(requireList, singleParamInput)).to.be.deep.equal({
+            assert.deepStrictEqual(plain(consume(requireList, singleParamInput)), {
                 argv: [],
                 exec: [],
                 flags: {},
@@ -131,7 +131,7 @@ describe('./lib/command/param', () => {
             });
 
 
-            expect(consume(requireList, multipleParamInput)).to.be.deep.equal({
+            assert.deepStrictEqual(plain(consume(requireList, multipleParamInput)), {
                 argv: [],
                 exec: [],
                 flags: {},
@@ -148,7 +148,7 @@ describe('./lib/command/param', () => {
 
             let noParams = new NoParams();
             let input = new ArgvInput(['param1']);
-            expect(() => consume(noParams, input)).to.throw(Error, 'Unexpected param: param1');
+            assert.throws(() => consume(noParams, input), { message: 'Unexpected param: param1' });
 
         });
     });
@@ -160,7 +160,7 @@ describe('./lib/command/param', () => {
             let ignoreParams = new IgnoreParams();
             let input = new ArgvInput(['param1', 'param2', 'param3']);
 
-            expect(consume(ignoreParams, input)).to.be.deep.equal({
+            assert.deepStrictEqual(plain(consume(ignoreParams, input)), {
                 argv: [],
                 exec: [],
                 flags: {},

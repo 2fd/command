@@ -7,8 +7,8 @@
   "scripts": {
     "compile": "tsc -p .",
     "declaration": "tsc -d -p tsconfig.d.json",
-    "preversion": "npm test && npm run declaration && npm run compile",
-    "test": "./node_modules/.bin/mocha"
+    "preversion": "pnpm test && pnpm run declaration && pnpm run compile",
+    "test": "tsc -p . && node test/index.js"
   },
   "repository": {
     "type": "git",
@@ -25,10 +25,7 @@
   "homepage": "https://github.com/2fd/command#readme",
   "dependencies": {},
   "devDependencies": {
-    "@types/chai": "^3.4.34",
-    "@types/mocha": "^2.2.33",
-    "@types/node": "^6.0.48",
-    "chai": "^3.5.0",
-    "mocha": "^2.4.5"
-  }
+    "typescript": "2.0.10"
+  },
+  "packageManager": "pnpm@11.22.0"
 }

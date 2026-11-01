@@ -1,4 +1,4 @@
-# @2fd/command [![Build Status](https://travis-ci.org/2fd/command.svg?branch=master)](https://travis-ci.org/2fd/command)
+# @2fd/command [![test](https://github.com/2fd/command/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/2fd/command/actions/workflows/test.yml)
 
 Modular command line interface
 
