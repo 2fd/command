@@ -3,6 +3,10 @@
 Modular, object-oriented framework for building command line tools in Node.js,
 with TypeScript definitions included.
 
+> **Zero dependencies.** `@2fd/command` has no runtime dependencies: installing
+> it adds exactly one package to your `node_modules`. The only dev dependency
+> is TypeScript, used to compile the sources.
+
 - [Install](#install)
 - [Goals](#goals)
 - [Quick start](#quick-start)
@@ -22,9 +26,12 @@ with TypeScript definitions included.
 npm install --save @2fd/command
 ```
 
-Tested on Node.js 0.12, 4, 5, 6 and 7. No runtime dependencies.
+Tested on Node.js 0.12, 4, 5, 6 and 7.
 
 ## Goals
+
+- **No dependencies.** Nothing else gets pulled into your tree, so there are
+  no transitive packages to audit, update or patch.
 
 - **Lazy loading.** A command can be registered as a string that points to its
   module (`'./commands#migrate'`). The module is only `require`d when that
