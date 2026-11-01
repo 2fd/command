@@ -1,4 +1,4 @@
-import {expect} from 'chai';
+import {describe, it, assert} from '../../harness';
 import {basename} from 'path';
 import {remoteCommand, quickCommand} from './utils';
 import {InputInterface, OutputInterface} from '../../../lib/interfaces';
@@ -18,14 +18,14 @@ describe('./lib/command/executor', () => {
         let exepectInstanceOutput = {
             error() { },
             log(msj) {
-                expect(msj).to.be.eq('RemoteCommand OUTPUT LOG');
+                assert.strictEqual(msj, 'RemoteCommand OUTPUT LOG');
             }
         };
 
         let exepectQuickOutput = {
             error() { },
             log(msj) {
-                expect(msj).to.be.eq('QuickCommand OUTPUT LOG');
+                assert.strictEqual(msj, 'QuickCommand OUTPUT LOG');
             }
         };
 
@@ -33,8 +33,8 @@ describe('./lib/command/executor', () => {
         executorCommand.version = '0.1.0';
         executorCommand.description = 'ExecutorCommand Test';
         it('property description', () => {
-            expect(executorCommand.description).to.be.eq('ExecutorCommand Test');
-            expect(executorCommand.helpDescription()).to.be.eq('ExecutorCommand Test [v0.1.0]\n');
+            assert.strictEqual(executorCommand.description, 'ExecutorCommand Test');
+            assert.strictEqual(executorCommand.helpDescription(), 'ExecutorCommand Test [v0.1.0]\n');
         });
 
         describe('method addCommand', () => {
@@ -155,7 +155,7 @@ describe('./lib/command/executor', () => {
             let expectOutput = () => new OuputExpected([
                 (help: string, ...styles: string[]) => {
 
-                    expect(help).to.be.eq(
+                    assert.strictEqual(help, 
                         '\n' +
                         '    ' + '%cExecutorCommand Test [v0.1.0]' +
                         '\n\n' +
@@ -180,7 +180,7 @@ describe('./lib/command/executor', () => {
                         '    ' + '%c-h, --help    %cPrint this help' + '\n'
                     );
 
-                    expect(styles).to.be.deep.equal([
+                    assert.deepStrictEqual(styles, [
                         'color:green', // description
                         '', // usage
                         '', // start options

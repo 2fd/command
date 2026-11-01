@@ -1,5 +1,7 @@
-import {expect} from 'chai';
+import {describe, it, assert} from '../../harness';
+import {plain} from './utils';
 import {basename, relative} from 'path';
+import {format} from 'util';
 import {ArgvInput, Formatter, ColorFormatter} from '../../../lib/command/io';
 import {RESET, CSS_TO_COMMAND} from '../../../lib/command/utils';
 
@@ -12,14 +14,14 @@ describe('./lib/command/io', () => {
             let emptyInput = new ArgvInput([]);
             let input = new ArgvInput(['--flag', 'param']);
 
-            expect(emptyInput).to.be.deep.equal({
+            assert.deepStrictEqual(plain(emptyInput), {
                 argv: [],
                 exec: [],
                 flags: {},
                 params: {},
             });
 
-            expect(input).to.be.deep.equal({
+            assert.deepStrictEqual(plain(input), {
                 argv: ['--flag', 'param'],
                 exec: [],
                 flags: {},
@@ -31,7 +33,7 @@ describe('./lib/command/io', () => {
 
             let input = new ArgvInput([process.execPath, '/usr/bin/command', '--flag', 'param']);
 
-            expect(input).to.be.deep.equal({
+            assert.deepStrictEqual(plain(input), {
                 argv: ['--flag', 'param'],
                 exec: ['command'],
                 flags: {},
@@ -44,7 +46,7 @@ describe('./lib/command/io', () => {
 
             let input = new ArgvInput([process.execPath, __filename, '--flag', 'param']);
 
-            expect(input).to.be.deep.equal({
+            assert.deepStrictEqual(plain(input), {
                 argv: ['--flag', 'param'],
                 exec: [
                     basename(process.execPath),
@@ -62,7 +64,7 @@ describe('./lib/command/io', () => {
 
         it('support string placeholder (%s)', () => {
 
-            expect(formatter.format(
+            assert.strictEqual(formatter.format(
                 'string:%s numericString:%s number:%s float:%s object:%s array:%s null:%s undefined:%s',
                 'string',
                 '10',
@@ -72,20 +74,20 @@ describe('./lib/command/io', () => {
                 [1, 2, 3],
                 null,
                 undefined
-            )).to.be.eq([
+            ), [
                 'string:string',
                 'numericString:10',
                 'number:1',
                 'float:2.5',
-                'object:[object Object]',
-                'array:1,2,3',
+                'object:' + format('%s', {}), // util.format output for objects changed in Node 12
+                'array:' + format('%s', [1, 2, 3]),
                 'null:null',
                 'undefined:undefined'
             ].join(' '));
         });
 
         it('support number placeholder (%d)', () => {
-            expect(formatter.format(
+            assert.strictEqual(formatter.format(
                 'string:%d numericString:%d number:%d float:%d object:%d array:%d null:%d undefined:%d',
                 'string',
                 '10',
@@ -95,7 +97,7 @@ describe('./lib/command/io', () => {
                 [1, 2, 3],
                 null,
                 undefined
-            )).to.be.eq([
+            ), [
                 'string:NaN',
                 'numericString:10',
                 'number:1',
@@ -108,7 +110,7 @@ describe('./lib/command/io', () => {
         });
 
         it('support number placeholder (%i)', () => {
-            expect(formatter.format(
+            assert.strictEqual(formatter.format(
                 'string:%i numericString:%i number:%i float:%i object:%i array:%i null:%i undefined:%i',
                 'string',
                 '10',
@@ -118,7 +120,7 @@ describe('./lib/command/io', () => {
                 [1, 2, 3],
                 null,
                 undefined
-            )).to.be.eq([
+            ), [
                 'string:NaN',
                 'numericString:10',
                 'number:1',
@@ -131,7 +133,7 @@ describe('./lib/command/io', () => {
         });
 
         it('support number placeholder (%f)', () => {
-            expect(formatter.format(
+            assert.strictEqual(formatter.format(
                 'string:%f numericString:%f number:%f float:%f object:%f array:%f null:%f undefined:%f',
                 'string',
                 '10',
@@ -141,7 +143,7 @@ describe('./lib/command/io', () => {
                 [1, 2, 3],
                 null,
                 undefined
-            )).to.be.eq([
+            ), [
                 'string:NaN',
                 'numericString:10',
                 'number:1',
@@ -154,7 +156,7 @@ describe('./lib/command/io', () => {
         });
 
         it('support object placeholder (%j)', () => {
-            expect(formatter.format(
+            assert.strictEqual(formatter.format(
                 'string:%j numericString:%j number:%j float:%j object:%j array:%j null:%j undefined:%j',
                 'string',
                 '10',
@@ -164,7 +166,7 @@ describe('./lib/command/io', () => {
                 [1, 2, 3],
                 null,
                 undefined
-            )).to.be.eq([
+            ), [
                 'string:"string"',
                 'numericString:"10"',
                 'number:1',
@@ -177,7 +179,7 @@ describe('./lib/command/io', () => {
         });
 
         it('support object placeholder (%o)', () => {
-            expect(formatter.format(
+            assert.strictEqual(formatter.format(
                 'string:%o numericString:%o number:%o float:%o object:%o array:%o null:%o undefined:%o',
                 'string',
                 '10',
@@ -187,7 +189,7 @@ describe('./lib/command/io', () => {
                 [1, 2, 3],
                 null,
                 undefined
-            )).to.be.eq([
+            ), [
                 'string:"string"',
                 'numericString:"10"',
                 'number:1',
@@ -200,7 +202,7 @@ describe('./lib/command/io', () => {
         });
 
         it('support object placeholder (%O)', () => {
-            expect(formatter.format(
+            assert.strictEqual(formatter.format(
                 'string:%O numericString:%O number:%O float:%O object:%O array:%O null:%O undefined:%O',
                 'string',
                 '10',
@@ -210,7 +212,7 @@ describe('./lib/command/io', () => {
                 [1, 2, 3],
                 null,
                 undefined
-            )).to.be.eq([
+            ), [
                 'string:"string"',
                 'numericString:"10"',
                 'number:1',
@@ -223,10 +225,10 @@ describe('./lib/command/io', () => {
         });
 
         it('support percent sign (%%)', () => {
-            expect(formatter.format(
+            assert.strictEqual(formatter.format(
                 'string:%s string:%%s string:%%%s string:%%%%s string:%%%%%s',
                 1, 2, 3
-            )).to.be.eq([
+            ), [
                 'string:1',
                 'string:%s',
                 'string:%2',
@@ -236,7 +238,7 @@ describe('./lib/command/io', () => {
         });
 
         it('ignore styles placeholder (%c)', () => {
-            expect(formatter.format(
+            assert.strictEqual(formatter.format(
                 'string:%c numericString:%c number:%c float:%c object:%c array:%c null:%c undefined:%c',
                 'string',
                 '10',
@@ -246,7 +248,7 @@ describe('./lib/command/io', () => {
                 [1, 2, 3],
                 null,
                 undefined
-            )).to.be.eq([
+            ), [
                 'string:',
                 'numericString:',
                 'number:',
@@ -265,7 +267,7 @@ describe('./lib/command/io', () => {
 
         it('support string placeholder (%s)', () => {
 
-            expect(formatter.format(
+            assert.strictEqual(formatter.format(
                 'string:%s numericString:%s number:%s float:%s object:%s array:%s null:%s undefined:%s',
                 'string',
                 '10',
@@ -275,20 +277,20 @@ describe('./lib/command/io', () => {
                 [1, 2, 3],
                 null,
                 undefined
-            )).to.be.eq([
+            ), [
                 'string:string',
                 'numericString:10',
                 'number:1',
                 'float:2.5',
-                'object:[object Object]',
-                'array:1,2,3',
+                'object:' + format('%s', {}), // util.format output for objects changed in Node 12
+                'array:' + format('%s', [1, 2, 3]),
                 'null:null',
                 'undefined:undefined\u001b[0m'
             ].join(' '));
         });
 
         it('support number placeholder (%d)', () => {
-            expect(formatter.format(
+            assert.strictEqual(formatter.format(
                 'string:%d numericString:%d number:%d float:%d object:%d array:%d null:%d undefined:%d',
                 'string',
                 '10',
@@ -298,7 +300,7 @@ describe('./lib/command/io', () => {
                 [1, 2, 3],
                 null,
                 undefined
-            )).to.be.eq([
+            ), [
                 'string:NaN',
                 'numericString:10',
                 'number:1',
@@ -311,7 +313,7 @@ describe('./lib/command/io', () => {
         });
 
         it('support number placeholder (%i)', () => {
-            expect(formatter.format(
+            assert.strictEqual(formatter.format(
                 'string:%i numericString:%i number:%i float:%i object:%i array:%i null:%i undefined:%i',
                 'string',
                 '10',
@@ -321,7 +323,7 @@ describe('./lib/command/io', () => {
                 [1, 2, 3],
                 null,
                 undefined
-            )).to.be.eq([
+            ), [
                 'string:NaN',
                 'numericString:10',
                 'number:1',
@@ -334,7 +336,7 @@ describe('./lib/command/io', () => {
         });
 
         it('support number placeholder (%f)', () => {
-            expect(formatter.format(
+            assert.strictEqual(formatter.format(
                 'string:%f numericString:%f number:%f float:%f object:%f array:%f null:%f undefined:%f',
                 'string',
                 '10',
@@ -344,7 +346,7 @@ describe('./lib/command/io', () => {
                 [1, 2, 3],
                 null,
                 undefined
-            )).to.be.eq([
+            ), [
                 'string:NaN',
                 'numericString:10',
                 'number:1',
@@ -357,7 +359,7 @@ describe('./lib/command/io', () => {
         });
 
         it('support object placeholder (%j)', () => {
-            expect(formatter.format(
+            assert.strictEqual(formatter.format(
                 'string:%j numericString:%j number:%j float:%j object:%j array:%j null:%j undefined:%j',
                 'string',
                 '10',
@@ -367,7 +369,7 @@ describe('./lib/command/io', () => {
                 [1, 2, 3],
                 null,
                 undefined
-            )).to.be.eq([
+            ), [
                 'string:"string"',
                 'numericString:"10"',
                 'number:1',
@@ -380,7 +382,7 @@ describe('./lib/command/io', () => {
         });
 
         it('support object placeholder (%o)', () => {
-            expect(formatter.format(
+            assert.strictEqual(formatter.format(
                 'string:%o numericString:%o number:%o float:%o object:%o array:%o null:%o undefined:%o',
                 'string',
                 '10',
@@ -390,7 +392,7 @@ describe('./lib/command/io', () => {
                 [1, 2, 3],
                 null,
                 undefined
-            )).to.be.eq([
+            ), [
                 'string:"string"',
                 'numericString:"10"',
                 'number:1',
@@ -403,7 +405,7 @@ describe('./lib/command/io', () => {
         });
 
         it('support object placeholder (%O)', () => {
-            expect(formatter.format(
+            assert.strictEqual(formatter.format(
                 'string:%O numericString:%O number:%O float:%O object:%O array:%O null:%O undefined:%O',
                 'string',
                 '10',
@@ -413,7 +415,7 @@ describe('./lib/command/io', () => {
                 [1, 2, 3],
                 null,
                 undefined
-            )).to.be.eq([
+            ), [
                 'string:"string"',
                 'numericString:"10"',
                 'number:1',
@@ -426,10 +428,10 @@ describe('./lib/command/io', () => {
         });
 
         it('support percent sign (%%)', () => {
-            expect(formatter.format(
+            assert.strictEqual(formatter.format(
                 'string:%s string:%%s string:%%%s string:%%%%s string:%%%%%s',
                 1, 2, 3
-            )).to.be.eq([
+            ), [
                 'string:1',
                 'string:%s',
                 'string:%2',
@@ -439,7 +441,7 @@ describe('./lib/command/io', () => {
         });
 
         it('support styles placeholder (%c)', () => {
-            expect(formatter.format(
+            assert.strictEqual(formatter.format(
                 'string:%c numericString:%c number:%c float:%c object:%c array:%c null:%c undefined:%c',
                 'string',
                 '10',
@@ -449,7 +451,7 @@ describe('./lib/command/io', () => {
                 [1, 2, 3],
                 null,
                 undefined
-            )).to.be.eq([
+            ), [
                 'string:\u001b[0m',
                 'numericString:\u001b[0m',
                 'number:\u001b[0m',
@@ -468,16 +470,16 @@ describe('./lib/command/io', () => {
                 let code = CSS_TO_COMMAND[style];
 
                 it(`support styles placeholder (%c: ${style})`, () => {
-                    expect(formatter.format(
+                    assert.strictEqual(formatter.format(
                         '%cStyle', style
-                    )).to.be.eq(RESET + code + 'Style' + RESET);
+                    ), RESET + code + 'Style' + RESET);
                 });
             });
 
         it(`support multiple styles in a single placeholder (%c)`, () => {
-            expect(formatter.format(
+            assert.strictEqual(formatter.format(
                 '%cStyles1 %cStyles2', 'font-weight:bold; color:red', 'text-decoration:underline; color:white; background-color:blue'
-            )).to.be.eq(
+            ), 
                 RESET + '\u001b[1m\u001b[31mStyles1 ' +
                 RESET + '\u001b[4m\u001b[37m\u001b[44mStyles2' + RESET
                 );
