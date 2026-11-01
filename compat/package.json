@@ -1,0 +1,8 @@
+{
+  "name": "compat",
+  "private": true,
+  "description": "Type-checks the packed @2fd/command declarations against several TypeScript versions",
+  "dependencies": {
+    "@2fd/command": "file:../package.tgz"
+  }
+}

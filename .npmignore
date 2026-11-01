@@ -7,7 +7,9 @@ npm-debug.log*
 .vscode
 node_modules
 test
+compat
 typings
+*.tgz
 
 # Source files
 .gitignore
