@@ -11,6 +11,9 @@ npm-debug.log*
 node_modules
 typings
 
+# Packed tarball (used by compat/)
+*.tgz
+
 # Conpiled files
 *.js
 *.d.ts

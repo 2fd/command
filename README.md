@@ -26,7 +26,14 @@ with TypeScript definitions included.
 npm install --save @2fd/command
 ```
 
-Tested on Node.js 0.12, 4, 5, 6 and 7.
+Supported Node.js versions are the ones tested in CI: every major release from
+0.12 to 26.
+
+Supported TypeScript versions are the ones tested in CI: 2.0, 2.4, 2.9, 3.9,
+4.9, 5.x, 6.x and the latest release. The `types` job installs the packed
+package into [`compat/`](compat) and type-checks it with each version. TS 2.0
+to 5.x use `moduleResolution: node`, and TS 5.x and later use `nodenext` with
+`strict`.
 
 ## Goals
 
@@ -46,7 +53,8 @@ Tested on Node.js 0.12, 4, 5, 6 and 7.
   objects behind interfaces, so any piece can be shared, replaced or extended.
 
 - **Typed.** Type definitions ship with the package (`index.d.ts`); no
-  `typings`/`@types` install required.
+  `typings`/`@types` install required. They are tested with TypeScript 2.0 up
+  to the latest release (see [Install](#install)).
 
 ## Quick start
 

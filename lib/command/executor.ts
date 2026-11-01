@@ -33,7 +33,7 @@ export type CommandTypeListIndex = {
     [command: string]: CommandType;
 }
 
-export class ExecutorCommand extends SoftCommand<ExecutorParams, ExecutorFlags> {
+export class ExecutorCommand extends SoftCommand<ExecutorFlags, ExecutorParams> {
 
     _commands: CommandListIndex = {};
 
